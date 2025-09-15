@@ -1,0 +1,28 @@
+site: saucedemo
+version: 1.0.0
+createdAt: "2025-09-15T16:40:00.000Z"
+steps:
+  - action: goto
+    url: https://www.saucedemo.com/
+    description: Navigate to login page
+  - action: fill
+    selector: "#user-name"
+    value: standard_user
+    description: Fill username
+  - action: fill
+    selector: "#password"
+    value: secret_sauce
+    description: Fill password
+  - action: click
+    selector: "#login-button"
+    description: Click login button
+  - action: waitForSelector
+    selector: ".inventory_list"
+    description: Wait for product list
+variables:
+  username: standard_user
+  password: secret_sauce
+options:
+  stealthLevel: high
+  maxRetries: 3
+  timeout: 30000
