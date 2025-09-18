@@ -1,0 +1,52 @@
+{
+  "site": "walmart",
+  "product": {
+    "url": "https://www.walmart.com/ip/Pokemon-Trading-Card-Game-Battle-Academy/573850405",
+    "sku": "573850405",
+    "name": "Pokemon Trading Card Game Battle Academy"
+  },
+  "customer": {
+    "email": "your-email@example.com",
+    "shipping": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "address1": "123 Main Street",
+      "address2": "",
+      "city": "Anytown",
+      "state": "CA",
+      "zipCode": "12345",
+      "phone": "555-123-4567"
+    },
+    "payment": {
+      "cardNumber": "4111111111111111",
+      "expiryMonth": "12",
+      "expiryYear": "2025",
+      "cvv": "123",
+      "cardholderName": "John Doe"
+    }
+  },
+  "options": {
+    "stealthLevel": "ultra",
+    "maxRetries": 5,
+    "timeout": 90000,
+    "humanBehavior": true,
+    "captchaSolver": "2captcha",
+    "proxy": null,
+    "notifications": [
+      {
+        "type": "discord",
+        "webhookUrl": "https://discord.com/api/webhooks/your-webhook-url"
+      }
+    ]
+  },
+  "automation": {
+    "enabled": true,
+    "triggerConditions": {
+      "inStock": true,
+      "maxPrice": 50.00,
+      "keywords": ["pokemon", "cards"]
+    },
+    "monitorInterval": 30,
+    "quickBuy": true
+  }
+}

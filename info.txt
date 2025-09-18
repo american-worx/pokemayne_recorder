@@ -1,0 +1,33 @@
+It all looks great. Awesome Job!!. Next I would like to persist data. 1) Make a database service, MongoDB. We already have dockerized mongo. Make a database repository for the frontend to interact with. 2) Class disign entities we're going to persists. We're going to need at least the following models; Retailer, Product, Flow, UserProfile. 
+
+Here's what the models should look like, you can add more fields as needed.
+
+Product:
+manufacturerId 
+description
+price
+interalId 
+
+Retailer:
+id : uuid
+name
+url 
+internalId
+zipcode
+
+Flow
+id
+retailer 
+steps
+
+
+UserProfile:
+id 
+shippingAddress
+billingAddress
+phoneNumber
+paymentMethod. 
+
+We'll so need to a service for proxies. This service is between the backend and retailers's endpoint.
+
+
