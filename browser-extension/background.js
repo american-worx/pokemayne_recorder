@@ -254,6 +254,7 @@ class PokemayneRecorder {
 
   setupHTTPPolling() {
     // Simple HTTP-based communication fallback
+    console.log('🔄 Setting up HTTP polling to:', this.getServerUrl());
     this.isConnected = true;
     this.updateBadge();
 
@@ -282,6 +283,95 @@ class PokemayneRecorder {
       }
     } catch (error) {
       console.error('HTTP message failed:', error);
+      this.isConnected = false;
+      this.updateBadge();
+    }
+  }
+
+  async sendHTTPStartRecording(config) {
+    try {
+      const response = await fetch(`${this.getServerUrl()}/api/extension/start_recording`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ config })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('📡 Recording started via HTTP:', result);
+
+        // Start recording locally (similar to Socket.IO flow)
+        this.sessionId = result.sessionId;
+        this.isRecording = true;
+        this.recordingData = {
+          actions: [],
+          network: [],
+          console: [],
+          dom: []
+        };
+
+        await this.saveState();
+        this.updateBadge();
+
+        // Notify all content scripts to start recording
+        const tabs = await chrome.tabs.query({});
+        for (const tab of tabs) {
+          try {
+            await chrome.tabs.sendMessage(tab.id, {
+              type: 'start_recording',
+              sessionId: this.sessionId
+            });
+          } catch (error) {
+            console.debug(`Could not notify tab ${tab.id}:`, error.message);
+          }
+        }
+      } else {
+        console.error('HTTP start recording failed:', response.status);
+      }
+    } catch (error) {
+      console.error('HTTP start recording failed:', error);
+      this.isConnected = false;
+      this.updateBadge();
+    }
+  }
+
+  async sendHTTPStopRecording() {
+    try {
+      const response = await fetch(`${this.getServerUrl()}/api/extension/stop_recording`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('📡 Recording stopped via HTTP:', result);
+
+        // Stop recording locally (similar to Socket.IO flow)
+        this.isRecording = false;
+        this.sessionId = null;
+
+        await this.saveState();
+        this.updateBadge();
+
+        // Notify all content scripts to stop recording
+        const tabs = await chrome.tabs.query({});
+        for (const tab of tabs) {
+          try {
+            await chrome.tabs.sendMessage(tab.id, { type: 'stop_recording' });
+          } catch (error) {
+            console.debug(`Could not notify tab ${tab.id}:`, error.message);
+          }
+        }
+      } else {
+        console.error('HTTP stop recording failed:', response.status);
+      }
+    } catch (error) {
+      console.error('HTTP stop recording failed:', error);
       this.isConnected = false;
       this.updateBadge();
     }
@@ -442,6 +532,7 @@ class PokemayneRecorder {
   }
 
   async startRecording(config = {}) {
+    console.log('🎬 Start recording called, isConnected:', this.isConnected, 'socket:', !!this.socket);
     if (!this.isConnected) {
       console.error('❌ Cannot start recording: Not connected to UI');
       return;
@@ -459,7 +550,7 @@ class PokemayneRecorder {
       });
     } else if (this.isConnected) {
       // HTTP fallback
-      this.sendHTTPMessage('start_recording', { config });
+      await this.sendHTTPStartRecording(config);
     }
 
     console.log('🎬 Recording start requested');
@@ -476,7 +567,7 @@ class PokemayneRecorder {
       this.socket.emit('extension_stop_recording');
     } else if (this.isConnected) {
       // HTTP fallback
-      this.sendHTTPMessage('stop_recording', {});
+      await this.sendHTTPStopRecording();
     }
 
     console.log('🛑 Recording stop requested');
