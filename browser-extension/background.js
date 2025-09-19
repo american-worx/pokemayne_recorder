@@ -453,9 +453,14 @@ class PokemayneRecorder {
     }
 
     // Signal server to start recording
-    this.socket.emit('extension_start_recording', {
-      config
-    });
+    if (this.socket && this.socket.connected) {
+      this.socket.emit('extension_start_recording', {
+        config
+      });
+    } else if (this.isConnected) {
+      // HTTP fallback
+      this.sendHTTPMessage('start_recording', { config });
+    }
 
     console.log('🎬 Recording start requested');
   }
@@ -467,7 +472,12 @@ class PokemayneRecorder {
     }
 
     // Signal server to stop recording
-    this.socket.emit('extension_stop_recording');
+    if (this.socket && this.socket.connected) {
+      this.socket.emit('extension_stop_recording');
+    } else if (this.isConnected) {
+      // HTTP fallback
+      this.sendHTTPMessage('stop_recording', {});
+    }
 
     console.log('🛑 Recording stop requested');
   }
