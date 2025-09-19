@@ -1,0 +1,181 @@
+{
+  "session": {
+    "id": "test_headless_fixed",
+    "startTime": 1758242954719,
+    "url": "https://example.com",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.7339.16 Safari/537.36",
+    "viewport": {
+      "width": 1945,
+      "height": 1083
+    }
+  },
+  "actions": [],
+  "network": {
+    "requests": [
+      {
+        "timestamp": 1758242955256,
+        "url": "https://example.com/",
+        "method": "GET",
+        "headers": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+          "accept-encoding": "gzip, deflate, br",
+          "accept-language": "en-US,en;q=0.9",
+          "cache-control": "max-age=0",
+          "sec-fetch-dest": "document",
+          "sec-fetch-mode": "navigate",
+          "sec-fetch-site": "none",
+          "sec-fetch-user": "?1",
+          "upgrade-insecure-requests": "1",
+          "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.7339.16 Safari/537.36",
+          "sec-ch-ua": "\"Chromium\";v=\"140\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"140\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"Windows\""
+        },
+        "postData": null,
+        "resourceType": "document",
+        "isNavigationRequest": true,
+        "frame": "about:blank"
+      }
+    ],
+    "responses": [
+      {
+        "timestamp": 1758242955462,
+        "url": "https://example.com/",
+        "status": 200,
+        "statusText": "",
+        "headers": {
+          "accept-ranges": "bytes",
+          "alt-svc": "h3=\":443\"; ma=93600",
+          "cache-control": "max-age=86000",
+          "content-encoding": "gzip",
+          "content-length": "648",
+          "content-type": "text/html",
+          "date": "Fri, 19 Sep 2025 00:49:15 GMT",
+          "etag": "\"84238dfc8092e5d9c0dac8ef93371a07:1736799080.121134\"",
+          "last-modified": "Mon, 13 Jan 2025 20:11:20 GMT",
+          "vary": "Accept-Encoding"
+        },
+        "fromCache": false,
+        "fromServiceWorker": false,
+        "securityDetails": {},
+        "timing": null
+      }
+    ],
+    "websockets": []
+  },
+  "console": [],
+  "errors": [
+    {
+      "timestamp": 1758242955491,
+      "type": "page_error",
+      "message": "Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "stack": "TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.\n    at <anonymous>:33:16\n    at <anonymous>:34:7\n    at <anonymous>:35:7",
+      "name": "TypeError"
+    },
+    {
+      "timestamp": 1758242955492,
+      "type": "page_error",
+      "message": "Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "stack": "TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.\n    at <anonymous>:33:16\n    at <anonymous>:39:7\n    at <anonymous>:40:7",
+      "name": "TypeError"
+    }
+  ],
+  "screenshots": [
+    {
+      "timestamp": 1758242971563,
+      "path": "recordings/test_headless_fixed/screenshots/1758242971289.png",
+      "size": 29682
+    }
+  ],
+  "dom": {
+    "snapshots": [
+      {
+        "timestamp": 1758242971603,
+        "html": "<html><head>\n    <title>Example Domain</title>\n\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\"Content-type\" content=\"text/html; charset=utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <style type=\"text/css\">\n    body {\n        background-color: #f0f0f2;\n        margin: 0;\n        padding: 0;\n        font-family: -apple-system, system-ui, BlinkMacSystemFont, \"Segoe UI\", \"Open Sans\", \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n        \n    }\n    div {\n        width: 600px;\n        margin: 5em auto;\n        padding: 2em;\n        background-color: #fdfdff;\n        border-radius: 0.5em;\n        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);\n    }\n    a:link, a:visited {\n        color: #38488f;\n        text-decoration: none;\n    }\n    @media (max-width: 700px) {\n        div {\n            margin: 0 auto;\n            width: auto;\n        }\n    }\n    </style>    \n</head>\n\n<body>\n<div>\n    <h1>Example Domain</h1>\n    <p>This domain is for use in illustrative examples in documents. You may use this\n    domain in literature without prior coordination or asking for permission.</p>\n    <p><a href=\"https://www.iana.org/domains/example\">More information...</a></p>\n</div>\n\n\n</body></html>",
+        "url": "https://example.com/",
+        "title": "Example Domain"
+      }
+    ],
+    "mutations": []
+  },
+  "security": {
+    "captchas": [],
+    "challenges": [],
+    "redirects": [
+      {
+        "timestamp": 1758242955467,
+        "url": "https://example.com/",
+        "type": "navigation"
+      }
+    ],
+    "cookies": [],
+    "localStorage": {},
+    "sessionStorage": {}
+  },
+  "performance": {
+    "navigationTiming": [
+      {
+        "timestamp": 1758242955545,
+        "name": "https://example.com/",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 0,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "h2",
+        "renderBlockingStatus": "non-blocking",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.3000001907348633,
+        "domainLookupStart": 4.800000190734863,
+        "domainLookupEnd": 31.100000381469727,
+        "connectStart": 31.100000381469727,
+        "secureConnectionStart": 64.40000009536743,
+        "connectEnd": 127.7000002861023,
+        "requestStart": 128.40000009536743,
+        "responseStart": 202.90000009536743,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 202.90000009536743,
+        "responseEnd": 206,
+        "transferSize": 948,
+        "encodedBodySize": 648,
+        "decodedBodySize": 1256,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 270.2000002861023,
+        "domContentLoadedEventStart": 270.2000002861023,
+        "domContentLoadedEventEnd": 270.40000009536743,
+        "domComplete": 270.40000009536743,
+        "loadEventStart": 270.40000009536743,
+        "loadEventEnd": 0,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null
+      }
+    ],
+    "resourceTiming": [
+      {
+        "timestamp": 1758242960490,
+        "resources": []
+      },
+      {
+        "timestamp": 1758242965489,
+        "resources": []
+      },
+      {
+        "timestamp": 1758242970490,
+        "resources": []
+      }
+    ],
+    "paintTiming": []
+  }
+}

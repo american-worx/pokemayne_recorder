@@ -20,8 +20,11 @@ class StealthyRecorder {
       ...options
     };
 
+    // Check if we have a display available
+    const hasDisplay = process.env.DISPLAY || process.env.WAYLAND_DISPLAY;
+
     this.browserManager = new BrowserManager({
-      headless: this.options.headless ?? true, // Default to headless for server environments
+      headless: this.options.headless ?? !hasDisplay, // Use headless if no display available
       recordingMode: true,
       stealthLevel: 'ultra'
     });
@@ -82,8 +85,34 @@ class StealthyRecorder {
       // Set up all recording listeners
       await this.setupRecordingListeners();
 
-      // Navigate to the URL
-      await page.goto(url, { waitUntil: 'networkidle' });
+      // Navigate to the URL with better timeout handling
+      logger.info(`Navigating to ${url}...`, { sessionId: this.options.sessionId });
+
+      try {
+        await page.goto(url, {
+          waitUntil: 'domcontentloaded', // Less strict than networkidle
+          timeout: 60000 // 60 seconds timeout
+        });
+        logger.info(`Successfully loaded ${url}`, { sessionId: this.options.sessionId });
+      } catch (error) {
+        logger.warn(`Initial navigation failed, trying with load event: ${error.message}`, {
+          sessionId: this.options.sessionId
+        });
+
+        // Fallback: try with just 'load' event
+        try {
+          await page.goto(url, {
+            waitUntil: 'load',
+            timeout: 90000 // 90 seconds for fallback
+          });
+          logger.info(`Successfully loaded ${url} with fallback method`, { sessionId: this.options.sessionId });
+        } catch (fallbackError) {
+          logger.error(`Failed to load ${url} even with fallback: ${fallbackError.message}`, {
+            sessionId: this.options.sessionId
+          });
+          throw fallbackError;
+        }
+      }
 
       this.recordingData.session.url = url;
       this.recordingData.session.userAgent = await page.evaluate(() => navigator.userAgent);
@@ -256,9 +285,20 @@ class StealthyRecorder {
             headers: response.headers(),
             fromCache: false, // API deprecated in newer Playwright versions
             fromServiceWorker: false, // API deprecated in newer Playwright versions
-            securityDetails: response.securityDetails(),
-            timing: response.timing()
+            securityDetails: response.securityDetails()
           };
+
+          // Get timing data safely - timing() method may not be available in all Playwright versions
+          try {
+            if (typeof response.timing === 'function') {
+              responseData.timing = response.timing();
+            } else {
+              responseData.timing = null;
+            }
+          } catch (timingError) {
+            responseData.timing = null;
+            logger.debug('Response timing not available', { url: response.url() });
+          }
 
           // Capture response body for important requests
           if (this.isImportantRequest(response.url())) {

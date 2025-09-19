@@ -3,6 +3,7 @@ import logger from '../core/utils/logger.js';
 import cron from 'node-cron';
 import fs from 'fs-extra';
 import path from 'path';
+import axios from 'axios';
 
 class InventoryMonitor {
   constructor(options = {}) {
@@ -488,7 +489,6 @@ class InventoryMonitor {
   }
 
   async sendWebhookNotification(alert, notification) {
-    const axios = require('axios');
 
     const payload = {
       alert,
@@ -504,7 +504,6 @@ class InventoryMonitor {
   }
 
   async sendDiscordNotification(alert, notification) {
-    const axios = require('axios');
 
     const embed = {
       title: `🎯 ${alert.type.replace('_', ' ').toUpperCase()}`,

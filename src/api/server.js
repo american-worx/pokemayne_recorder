@@ -15,6 +15,8 @@ import StealthyRecorder from '../recorder/stealthy-recorder.js';
 import InventoryMonitor from '../monitor/inventory-monitor.js';
 // import WalmartModule from '../modules/walmart-module.js';
 import logger from '../core/utils/logger.js';
+import databaseRoutes from './database-routes.js';
+import { getRepository } from '../database/repository.js';
 
 class PokemayneAPI {
   constructor() {
@@ -31,10 +33,26 @@ class PokemayneAPI {
     this.activeRecordings = new Map();
     this.activeMonitors = new Map();
     this.activeAutomations = new Map();
+    this.repository = null;
 
+    this.initializeDatabase();
     this.setupMiddleware();
     this.setupRoutes();
     this.setupWebSocket();
+  }
+
+  async initializeDatabase() {
+    try {
+      this.repository = await getRepository({
+        cacheEnabled: true,
+        cacheTimeout: 300000, // 5 minutes
+        autoSave: false // Data stays in memory until user chooses to save
+      });
+      logger.info('Database repository initialized successfully');
+    } catch (error) {
+      logger.error('Failed to initialize database repository:', error);
+      // Continue without database - graceful degradation
+    }
   }
 
   setupMiddleware() {
@@ -44,6 +62,12 @@ class PokemayneAPI {
 
     // Serve static files from UI build
     this.app.use(express.static(path.join(__dirname, '../../ui/build')));
+
+    // Make repository available to all routes
+    this.app.use((req, res, next) => {
+      req.repository = this.repository;
+      next();
+    });
 
     // Request logging
     this.app.use((req, res, next) => {
@@ -56,13 +80,17 @@ class PokemayneAPI {
   }
 
   setupRoutes() {
+    // Database routes
+    this.app.use('/api/db', databaseRoutes);
+
     // Health check
     this.app.get('/api/health', (req, res) => {
       res.json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
-        version: '1.0.0'
+        version: '1.0.0',
+        database: this.repository ? 'connected' : 'unavailable'
       });
     });
 
@@ -564,7 +592,175 @@ class PokemayneAPI {
         logger.info(`Client ${socket.id} joined automation room: ${automationId}`);
       });
 
+      // Browser Extension WebSocket Handler
+      socket.on('extension_connect', (data) => {
+        socket.join('extension');
+        socket.extensionId = data.extensionId || socket.id;
+        logger.info(`Browser extension connected: ${socket.extensionId}`);
+
+        socket.emit('connection_confirmed', {
+          isConnected: true,
+          serverId: socket.id,
+          timestamp: Date.now()
+        });
+      });
+
+      socket.on('extension_status', (callback) => {
+        const sessionId = socket.currentSessionId;
+        callback({
+          isConnected: true,
+          isRecording: !!sessionId,
+          sessionId: sessionId || null
+        });
+      });
+
+      socket.on('extension_start_recording', async (data) => {
+        try {
+          const sessionId = `ext_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          socket.currentSessionId = sessionId;
+
+          logger.info(`Extension recording started: ${sessionId}`);
+
+          // Store extension recording session
+          this.activeRecordings.set(sessionId, {
+            type: 'extension',
+            sessionId,
+            extensionId: socket.extensionId,
+            startTime: Date.now(),
+            actions: [],
+            networkRequests: []
+          });
+
+          socket.emit('recording_started', {
+            sessionId,
+            timestamp: Date.now()
+          });
+
+          // Notify UI clients
+          this.io.to('ui').emit('extension_recording_started', {
+            sessionId,
+            extensionId: socket.extensionId
+          });
+
+        } catch (error) {
+          logger.error('Failed to start extension recording:', error);
+          socket.emit('recording_error', {
+            error: 'Failed to start recording',
+            message: error.message
+          });
+        }
+      });
+
+      socket.on('extension_stop_recording', async () => {
+        try {
+          const sessionId = socket.currentSessionId;
+          if (!sessionId) {
+            socket.emit('recording_error', { error: 'No active recording' });
+            return;
+          }
+
+          const recording = this.activeRecordings.get(sessionId);
+          if (recording) {
+            recording.endTime = Date.now();
+            recording.duration = recording.endTime - recording.startTime;
+
+            logger.info(`Extension recording stopped: ${sessionId} (${recording.duration}ms)`);
+
+            // Save recording data if repository is available
+            if (this.repository) {
+              try {
+                await this.repository.saveRecording(recording);
+              } catch (error) {
+                logger.error('Failed to save recording:', error);
+              }
+            }
+          }
+
+          socket.currentSessionId = null;
+          this.activeRecordings.delete(sessionId);
+
+          socket.emit('recording_stopped', {
+            sessionId,
+            timestamp: Date.now(),
+            duration: recording?.duration || 0
+          });
+
+          // Notify UI clients
+          this.io.to('ui').emit('extension_recording_stopped', {
+            sessionId,
+            extensionId: socket.extensionId,
+            recording
+          });
+
+        } catch (error) {
+          logger.error('Failed to stop extension recording:', error);
+          socket.emit('recording_error', {
+            error: 'Failed to stop recording',
+            message: error.message
+          });
+        }
+      });
+
+      socket.on('extension_recording_data', (data) => {
+        const sessionId = socket.currentSessionId;
+        if (!sessionId) return;
+
+        const recording = this.activeRecordings.get(sessionId);
+        if (!recording) return;
+
+        // Store recording data
+        if (data.type === 'action') {
+          recording.actions.push({
+            ...data.payload,
+            timestamp: Date.now()
+          });
+        } else if (data.type === 'network') {
+          recording.networkRequests.push({
+            ...data.payload,
+            timestamp: Date.now()
+          });
+        }
+
+        // Real-time data streaming to UI
+        this.io.to('ui').emit('extension_recording_data', {
+          sessionId,
+          extensionId: socket.extensionId,
+          data
+        });
+      });
+
+      // UI client identification
+      socket.on('ui_connect', () => {
+        socket.join('ui');
+        logger.info(`UI client connected: ${socket.id}`);
+
+        // Send current extension status
+        const extensionClients = Array.from(this.io.sockets.sockets.values())
+          .filter(s => s.rooms.has('extension'))
+          .map(s => ({
+            id: s.extensionId,
+            isRecording: !!s.currentSessionId,
+            sessionId: s.currentSessionId
+          }));
+
+        socket.emit('extension_status_update', { extensions: extensionClients });
+      });
+
       socket.on('disconnect', () => {
+        if (socket.rooms.has('extension')) {
+          logger.info(`Browser extension disconnected: ${socket.extensionId}`);
+
+          // Clean up active recording if exists
+          if (socket.currentSessionId) {
+            this.activeRecordings.delete(socket.currentSessionId);
+          }
+
+          // Notify UI clients
+          this.io.to('ui').emit('extension_disconnected', {
+            extensionId: socket.extensionId
+          });
+        }
+
         logger.info(`WebSocket client disconnected: ${socket.id}`);
       });
     });

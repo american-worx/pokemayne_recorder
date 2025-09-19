@@ -1,4 +1,43 @@
-It all looks great. Awesome Job!!. Next I would like to persist data. 1) Make a database service, MongoDB. We already have dockerized mongo. Make a database repository for the frontend to interact with. 2) Class disign entities we're going to persists. We're going to need at least the following models; Retailer, Product, Flow, UserProfile. 
+docker run -d --name redis -p 6379:6379 redis:alpine
+ssh -L 3001:localhost:3001 esel@162.233.39.125
+
+
+By the way, this app is running on a remote server and I use ssh tunnel (ssh -L 3001:localhost:3001 esel@xxx.xxx.xx.xxx). Which means the ui is on a different machine than the backend.
+
+
+Browser Extension Summary
+
+  ✅ Completed:
+
+  1. Full Extension Structure - manifest.json, background.js, content.js, injected.js, popup.html/js
+  2. Stealth Capabilities - Anti-detection, webdriver hiding, timing jitter, plugin spoofing
+  3. Persistent State - Recording survives navigation, refresh, browser restart via chrome.storage
+  4. UI-Dependent Design - Extension cannot operate without connection to mothership UI
+  5. Recording Controls - Start/Stop buttons with connection/recording indicator lights
+  6. Network Monitoring - Intercepts fetch/XHR in page context for stealth
+  7. Action Capture - Clicks, keystrokes, form submissions, DOM changes, scrolling
+  8. Security Features - Password filtering, sensitive data redaction
+
+  🔄 In Progress:
+
+  - WebSocket Bridge - Need to add /ws/extension endpoint to API server for extension communication
+
+  ⏳ Still Needed:
+
+  1. WebSocket Server Implementation - Add extension WebSocket handler to existing Socket.IO server
+  2. Icon Files - Create actual PNG icons (currently just placeholder)
+  3. UI Integration - Update React UI to show extension connection status and recording data
+  4. Testing - Load extension in Chrome and test connection to UI
+
+  Architecture:
+
+  Browser Extension → WebSocket → UI (localhost:3001) → API → Remote Backend
+
+  The extension is 95% complete - just need the WebSocket bridge and UI integration to make it functional.
+
+Please review all files in browser-extension and continue. 
+
+It all looks great. Awesome Job!!. Next I would like to persist data. 1) Make a database service for redit. We already have dockerized redis. Make a database repository for the frontend to interact with. The data will be in memory, until the user choose to save or not. If save, then data should be stored in database.  2) Class disign entities we're going to persists. We're going to need at least the following models; Retailer, Product, Flow, UserProfile and Logs. 
 
 Here's what the models should look like, you can add more fields as needed.
 
@@ -6,7 +45,9 @@ Product:
 manufacturerId 
 description
 price
-interalId 
+internalId 
+url
+retailer 
 
 Retailer:
 id : uuid
@@ -14,6 +55,7 @@ name
 url 
 internalId
 zipcode
+products
 
 Flow
 id
@@ -29,5 +71,6 @@ phoneNumber
 paymentMethod. 
 
 We'll so need to a service for proxies. This service is between the backend and retailers's endpoint.
+
 
 

@@ -3,6 +3,7 @@ import stealth from 'puppeteer-extra-plugin-stealth';
 import { getRandomUserAgent } from './utils/user-agents.js';
 import { getRandomViewport } from './utils/viewports.js';
 import logger from './utils/logger.js';
+import fs from 'fs-extra';
 
 class BrowserManager {
   constructor(options = {}) {
@@ -38,6 +39,7 @@ class BrowserManager {
 
     const launchOptions = {
       headless: this.options.headless,
+      slowMo: this.options.recordingMode ? 100 : 0, // Add slight delay for recording visibility
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -66,10 +68,19 @@ class BrowserManager {
       launchOptions.proxy = this.options.proxy;
     }
 
+    logger.info(`Launching browser with options:`, {
+      headless: launchOptions.headless,
+      recordingMode: this.options.recordingMode,
+      sessionId
+    });
+
     const browser = await chromium.launch(launchOptions);
     this.browsers.set(browserId, browser);
 
-    logger.info(`Stealthy browser launched: ${browserId}`);
+    logger.info(`Stealthy browser launched: ${browserId}`, {
+      headless: launchOptions.headless,
+      slowMo: launchOptions.slowMo
+    });
     return browser;
   }
 
@@ -368,7 +379,6 @@ class BrowserManager {
   }
 
   async saveRecording(sessionId, recordings) {
-    const fs = require('fs-extra');
     const recordingPath = `recordings/${sessionId}_${Date.now()}.json`;
 
     await fs.ensureDir('recordings');

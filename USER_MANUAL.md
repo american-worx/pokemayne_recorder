@@ -142,7 +142,20 @@ npm run start:full
 npm run api        # Start API server only
 npm run ui         # Start web interface only
 npm run dev:full   # Development mode with hot reload
+
+# Stop individual services
+  npm run stop:api
+  npm run stop:ui
+  npm run stop:monitor
+
+  # Stop everything at once
+  npm run stop:full
+
+  # Then restart what you need
+  npm run api
+  npm run dev:full
 ```
+
 
 ### 2. Access the Web Interface
 Open your browser to `http://localhost:3001`
