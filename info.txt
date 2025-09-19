@@ -1,6 +1,9 @@
 docker run -d --name redis -p 6379:6379 redis:alpine
 ssh -L 3001:localhost:3001 esel@162.233.39.125
 
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/americanworx
+ssh -T git@github.com
 
 By the way, this app is running on a remote server and I use ssh tunnel (ssh -L 3001:localhost:3001 esel@xxx.xxx.xx.xxx). Which means the ui is on a different machine than the backend.
 

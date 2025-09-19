@@ -763,3 +763,23 @@
 {"level":"info","message":"Recording saved: recordings/test_headless_fixed_1758251085957.json","service":"pokemayne-recorder","timestamp":"2025-09-18 23:04:45"}
 {"level":"info","message":"Recording saved: recordings/test_headless_fixed_1758251115961.json","service":"pokemayne-recorder","timestamp":"2025-09-18 23:05:15"}
 {"level":"info","message":"Recording saved: recordings/test_headless_fixed_1758251145966.json","service":"pokemayne-recorder","timestamp":"2025-09-18 23:05:45"}
+{"level":"info","message":"🚀 Pokemayne Recorder API started on port 3001","service":"pokemayne-recorder","timestamp":"2025-09-19 11:04:04"}
+{"level":"info","message":"📱 UI available at http://localhost:3001","service":"pokemayne-recorder","timestamp":"2025-09-19 11:04:04"}
+{"level":"info","message":"🔌 WebSocket server running","service":"pokemayne-recorder","timestamp":"2025-09-19 11:04:04"}
+{"db":0,"host":"localhost","level":"info","message":"Redis connected successfully","port":6379,"service":"pokemayne-recorder","timestamp":"2025-09-19 11:04:04"}
+{"level":"info","message":"Redis client initialized successfully","service":"pokemayne-recorder","timestamp":"2025-09-19 11:04:04"}
+{"level":"info","message":"Database repository initialized successfully","service":"pokemayne-recorder","timestamp":"2025-09-19 11:04:04"}
+{"level":"info","message":"Database repository initialized successfully","service":"pokemayne-recorder","timestamp":"2025-09-19 11:04:04"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"GET /favicon.ico","service":"pokemayne-recorder","timestamp":"2025-09-19 11:05:15","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"GET /manifest.json","service":"pokemayne-recorder","timestamp":"2025-09-19 11:05:15","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"GET /manifest.json","service":"pokemayne-recorder","timestamp":"2025-09-19 11:05:34","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"🚀 Pokemayne Recorder API started on port 3001","service":"pokemayne-recorder","timestamp":"2025-09-19 12:17:56"}
+{"level":"info","message":"📱 UI available at http://localhost:3001","service":"pokemayne-recorder","timestamp":"2025-09-19 12:17:56"}
+{"level":"info","message":"🔌 WebSocket server running","service":"pokemayne-recorder","timestamp":"2025-09-19 12:17:56"}
+{"db":0,"host":"localhost","level":"info","message":"Redis connected successfully","port":6379,"service":"pokemayne-recorder","timestamp":"2025-09-19 12:17:56"}
+{"level":"info","message":"Redis client initialized successfully","service":"pokemayne-recorder","timestamp":"2025-09-19 12:17:56"}
+{"level":"info","message":"Database repository initialized successfully","service":"pokemayne-recorder","timestamp":"2025-09-19 12:17:56"}
+{"level":"info","message":"Database repository initialized successfully","service":"pokemayne-recorder","timestamp":"2025-09-19 12:17:56"}
+{"ip":"::ffff:192.168.1.158","level":"info","message":"GET /favicon.ico","service":"pokemayne-recorder","timestamp":"2025-09-19 12:32:02","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"GET /api/stats","service":"pokemayne-recorder","timestamp":"2025-09-19 12:32:02","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"}
+{"level":"info","message":"WebSocket client connected: 2UkhfWt-0GV54TyIAAAB","service":"pokemayne-recorder","timestamp":"2025-09-19 12:32:02"}

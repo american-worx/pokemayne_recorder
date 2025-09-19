@@ -1,14 +1,29 @@
 // Pokemayne Recorder - Background Service Worker
 // Maintains connection to UI and coordinates recording
 
-// Import Socket.IO client
-importScripts('socket.io.min.js');
+// Socket.IO client for service worker
+let io = null;
+
+// Load Socket.IO client dynamically
+async function loadSocketIO() {
+  try {
+    // Try to load Socket.IO from the bundled file
+    const script = await fetch(chrome.runtime.getURL('socket.io.min.js'));
+    const scriptText = await script.text();
+    eval(scriptText);
+    return self.io;
+  } catch (error) {
+    console.warn('Failed to load Socket.IO, falling back to WebSocket:', error);
+    return null;
+  }
+}
 
 class PokemayneRecorder {
   constructor() {
     this.isConnected = false;
     this.isRecording = false;
     this.sessionId = null;
+    this.socket = null;
     this.websocket = null;
     this.reconnectInterval = null;
     this.heartbeatInterval = null;
@@ -24,6 +39,9 @@ class PokemayneRecorder {
   }
 
   async initializeExtension() {
+    // Load Socket.IO client
+    io = await loadSocketIO();
+
     // Restore state from storage
     await this.restoreState();
 
@@ -78,12 +96,30 @@ class PokemayneRecorder {
     if (this.socket) {
       this.socket.disconnect();
     }
+    if (this.websocket) {
+      this.websocket.close();
+    }
 
     try {
-      // Use Socket.IO client
-      this.socket = io(`http://localhost:${this.uiPort}`, {
-        transports: ['websocket']
-      });
+      if (io) {
+        // Use Socket.IO client
+        this.socket = io(`http://localhost:${this.uiPort}`, {
+          transports: ['websocket']
+        });
+        this.setupSocketIOHandlers();
+      } else {
+        // Fallback to plain WebSocket
+        this.setupWebSocketConnection();
+      }
+    } catch (error) {
+      console.error('Failed to connect to UI:', error);
+      this.isConnected = false;
+      this.updateBadge();
+      this.scheduleReconnect();
+    }
+  }
+
+  setupSocketIOHandlers() {
 
       this.socket.on('connect', () => {
         console.log('🚀 Connected to Pokemayne UI');
@@ -185,13 +221,49 @@ class PokemayneRecorder {
         this.isConnected = false;
         this.updateBadge();
       });
+  }
 
-    } catch (error) {
-      console.error('Failed to connect to UI:', error);
+  setupWebSocketConnection() {
+    this.websocket = new WebSocket(`ws://localhost:${this.uiPort}/socket.io/?EIO=4&transport=websocket`);
+
+    this.websocket.onopen = () => {
+      console.log('🚀 Connected to Pokemayne UI (WebSocket fallback)');
+      this.isConnected = true;
+      this.updateBadge();
+      this.startHeartbeat();
+
+      // Send extension connection signal
+      this.websocket.send(JSON.stringify({
+        type: 'extension_connect',
+        data: {
+          extensionId: chrome.runtime.id,
+          version: chrome.runtime.getManifest().version
+        }
+      }));
+    };
+
+    this.websocket.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        this.handleUIMessage(message);
+      } catch (error) {
+        console.error('Failed to parse WebSocket message:', error);
+      }
+    };
+
+    this.websocket.onclose = () => {
+      console.log('❌ Disconnected from Pokemayne UI');
       this.isConnected = false;
       this.updateBadge();
+      this.stopHeartbeat();
       this.scheduleReconnect();
-    }
+    };
+
+    this.websocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      this.isConnected = false;
+      this.updateBadge();
+    };
   }
 
   scheduleReconnect() {
