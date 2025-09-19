@@ -194,12 +194,78 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    .config-section {
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+    }
+
+    .config-label {
+      font-size: 12px;
+      margin-bottom: 8px;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+
+    .url-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 14px;
+      font-family: monospace;
+      box-sizing: border-box;
+    }
+
+    .url-input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .url-input:focus {
+      outline: none;
+      border-color: #00ff88;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .config-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .btn-config {
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-config:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
   </style>
 </head>
 <body>
   <div class="header">
     <div class="logo">🎯 Pokemayne</div>
     <div class="version">Recorder v1.0.0</div>
+  </div>
+
+  <div class="config-section">
+    <div class="config-label">Server URL</div>
+    <input type="text" id="server-url" class="url-input" placeholder="http://192.168.1.100:3001">
+    <div class="config-buttons">
+      <button id="save-url" class="btn-config">Save</button>
+      <button id="test-connection" class="btn-config">Test</button>
+    </div>
   </div>
 
   <div id="loading" class="connecting">

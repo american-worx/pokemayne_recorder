@@ -27,7 +27,8 @@ class PokemayneRecorder {
     this.websocket = null;
     this.reconnectInterval = null;
     this.heartbeatInterval = null;
-    this.uiPort = 3001;
+    this.serverHost = 'localhost'; // Default host
+    this.serverPort = 3001; // Default port
     this.recordingData = {
       actions: [],
       network: [],
@@ -42,6 +43,9 @@ class PokemayneRecorder {
     // Load Socket.IO client
     io = await loadSocketIO();
 
+    // Load server configuration
+    await this.loadServerConfig();
+
     // Restore state from storage
     await this.restoreState();
 
@@ -55,6 +59,25 @@ class PokemayneRecorder {
     this.updateBadge();
 
     console.log('🎯 Pokemayne Recorder initialized');
+  }
+
+  async loadServerConfig() {
+    try {
+      const result = await chrome.storage.local.get(['serverUrl']);
+      if (result.serverUrl) {
+        const url = new URL(result.serverUrl);
+        this.serverHost = url.hostname;
+        this.serverPort = url.port || (url.protocol === 'https:' ? 443 : 80);
+      }
+      console.log(`🔗 Server config: ${this.serverHost}:${this.serverPort}`);
+    } catch (error) {
+      console.error('Failed to load server config:', error);
+      // Keep defaults
+    }
+  }
+
+  getServerUrl() {
+    return `http://${this.serverHost}:${this.serverPort}`;
   }
 
   async restoreState() {
@@ -103,7 +126,7 @@ class PokemayneRecorder {
     try {
       if (io) {
         // Use Socket.IO client
-        this.socket = io(`http://localhost:${this.uiPort}`, {
+        this.socket = io(this.getServerUrl(), {
           transports: ['websocket']
         });
         this.setupSocketIOHandlers();
@@ -246,7 +269,7 @@ class PokemayneRecorder {
 
   async sendHTTPMessage(type, data) {
     try {
-      const response = await fetch(`http://localhost:${this.uiPort}/api/extension/${type}`, {
+      const response = await fetch(`${this.getServerUrl()}/api/extension/${type}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -268,7 +291,7 @@ class PokemayneRecorder {
     // Poll every 5 seconds for status updates
     this.statusInterval = setInterval(async () => {
       try {
-        const response = await fetch(`http://localhost:${this.uiPort}/api/extension/status`);
+        const response = await fetch(`${this.getServerUrl()}/api/extension/status`);
         if (response.ok) {
           const status = await response.json();
           if (status.command === 'start_recording' && !this.isRecording) {
@@ -276,9 +299,27 @@ class PokemayneRecorder {
           } else if (status.command === 'stop_recording' && this.isRecording) {
             await this.handleRecordingStop();
           }
+        } else {
+          console.warn(`Status polling failed: ${response.status} ${response.statusText}`);
+          if (response.status === 404) {
+            console.log('API server may not be running or accessible');
+            this.isConnected = false;
+            this.updateBadge();
+          }
         }
       } catch (error) {
         console.error('Status polling failed:', error);
+        this.isConnected = false;
+        this.updateBadge();
+
+        // Stop polling if we can't connect
+        if (this.statusInterval) {
+          clearInterval(this.statusInterval);
+          this.statusInterval = null;
+        }
+
+        // Try to reconnect after a delay
+        this.scheduleReconnect();
       }
     }, 5000);
   }
@@ -536,10 +577,15 @@ class PokemayneRecorder {
 // Initialize the recorder
 const recorder = new PokemayneRecorder();
 
-// Listen for messages from content scripts
+// Listen for messages from content scripts and popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type.startsWith('record_')) {
     recorder.handleContentScriptMessage(message, sender);
+  } else if (message.type === 'server_url_changed') {
+    // Reload server config and reconnect
+    recorder.loadServerConfig().then(() => {
+      recorder.connectToUI();
+    });
   }
 
   sendResponse({ received: true });

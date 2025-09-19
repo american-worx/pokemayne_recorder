@@ -21,13 +21,19 @@ class PopupController {
       stopBtn: document.getElementById('stop-btn'),
       sessionInfo: document.getElementById('session-info'),
       sessionId: document.getElementById('session-id'),
-      errorMessage: document.getElementById('error-message')
+      errorMessage: document.getElementById('error-message'),
+      serverUrl: document.getElementById('server-url'),
+      saveUrlBtn: document.getElementById('save-url'),
+      testConnectionBtn: document.getElementById('test-connection')
     };
 
     this.initializePopup();
   }
 
-  initializePopup() {
+  async initializePopup() {
+    // Load saved server URL
+    await this.loadServerUrl();
+
     // Connect to background script
     this.connectToBackground();
 
@@ -60,6 +66,20 @@ class PopupController {
 
     this.elements.stopBtn.addEventListener('click', () => {
       this.stopRecording();
+    });
+
+    this.elements.saveUrlBtn.addEventListener('click', () => {
+      this.saveServerUrl();
+    });
+
+    this.elements.testConnectionBtn.addEventListener('click', () => {
+      this.testConnection();
+    });
+
+    this.elements.serverUrl.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        this.saveServerUrl();
+      }
     });
 
     // Auto-refresh status every 2 seconds
@@ -163,6 +183,83 @@ class PopupController {
 
   hideError() {
     this.elements.errorMessage.style.display = 'none';
+  }
+
+  async loadServerUrl() {
+    try {
+      const result = await chrome.storage.local.get(['serverUrl']);
+      const savedUrl = result.serverUrl || 'http://localhost:3001';
+      this.elements.serverUrl.value = savedUrl;
+    } catch (error) {
+      console.error('Failed to load server URL:', error);
+      this.elements.serverUrl.value = 'http://localhost:3001';
+    }
+  }
+
+  async saveServerUrl() {
+    try {
+      const url = this.elements.serverUrl.value.trim();
+      if (!url) {
+        this.showError('Please enter a valid server URL');
+        return;
+      }
+
+      // Basic URL validation
+      try {
+        new URL(url);
+      } catch (e) {
+        this.showError('Invalid URL format. Use http://ip:port');
+        return;
+      }
+
+      await chrome.storage.local.set({ serverUrl: url });
+
+      // Notify background script of URL change
+      chrome.runtime.sendMessage({
+        type: 'server_url_changed',
+        url: url
+      });
+
+      this.elements.saveUrlBtn.textContent = 'Saved!';
+      setTimeout(() => {
+        this.elements.saveUrlBtn.textContent = 'Save';
+      }, 2000);
+
+      this.hideError();
+    } catch (error) {
+      console.error('Failed to save server URL:', error);
+      this.showError('Failed to save URL');
+    }
+  }
+
+  async testConnection() {
+    const url = this.elements.serverUrl.value.trim();
+    if (!url) {
+      this.showError('Please enter a server URL first');
+      return;
+    }
+
+    this.elements.testConnectionBtn.textContent = 'Testing...';
+    this.elements.testConnectionBtn.disabled = true;
+
+    try {
+      const response = await fetch(`${url}/api/health`, {
+        method: 'GET',
+        timeout: 5000
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        this.showError(`✅ Connection successful! Server status: ${data.status}`);
+      } else {
+        this.showError(`❌ Server responded with ${response.status}`);
+      }
+    } catch (error) {
+      this.showError(`❌ Connection failed: ${error.message}`);
+    }
+
+    this.elements.testConnectionBtn.textContent = 'Test';
+    this.elements.testConnectionBtn.disabled = false;
   }
 }
 
