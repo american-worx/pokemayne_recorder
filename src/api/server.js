@@ -119,6 +119,9 @@ class PokemayneAPI {
     // Settings endpoints
     this.setupSettingsRoutes();
 
+    // Extension HTTP endpoints (fallback for when Socket.IO fails)
+    this.setupExtensionRoutes();
+
     // Serve React app for all other routes
     this.app.get('*', (req, res) => {
       res.sendFile(path.join(__dirname, '../../ui/build/index.html'));
@@ -565,6 +568,77 @@ class PokemayneAPI {
           message: error.message
         });
       }
+    });
+  }
+
+  setupExtensionRoutes() {
+    // Extension connection
+    this.app.post('/api/extension/extension_connect', (req, res) => {
+      logger.info('Extension connected via HTTP fallback');
+      res.json({ success: true, message: 'Extension connected' });
+    });
+
+    // Extension status polling
+    this.app.get('/api/extension/status', (req, res) => {
+      // Return any pending commands for the extension
+      res.json({
+        command: null, // 'start_recording' | 'stop_recording' | null
+        sessionId: null,
+        timestamp: Date.now()
+      });
+    });
+
+    // Extension recording data
+    this.app.post('/api/extension/recording_data', (req, res) => {
+      const { type, payload } = req.body;
+
+      logger.info(`Extension recording data: ${type}`);
+
+      // Forward to UI clients via WebSocket
+      this.io.to('ui').emit('extension_recording_data', {
+        type,
+        payload,
+        timestamp: Date.now()
+      });
+
+      res.json({ success: true });
+    });
+
+    // Start recording (for extension to call)
+    this.app.post('/api/extension/start_recording', (req, res) => {
+      const sessionId = `ext_http_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+      logger.info(`Extension HTTP recording started: ${sessionId}`);
+
+      // Store recording session
+      this.activeRecordings.set(sessionId, {
+        type: 'extension_http',
+        sessionId,
+        startTime: Date.now(),
+        actions: [],
+        networkRequests: []
+      });
+
+      res.json({
+        success: true,
+        sessionId,
+        timestamp: Date.now()
+      });
+    });
+
+    // Stop recording (for extension to call)
+    this.app.post('/api/extension/stop_recording', (req, res) => {
+      const { sessionId } = req.body;
+
+      if (sessionId && this.activeRecordings.has(sessionId)) {
+        this.activeRecordings.delete(sessionId);
+        logger.info(`Extension HTTP recording stopped: ${sessionId}`);
+      }
+
+      res.json({
+        success: true,
+        timestamp: Date.now()
+      });
     });
   }
 

@@ -224,46 +224,112 @@ class PokemayneRecorder {
   }
 
   setupWebSocketConnection() {
-    this.websocket = new WebSocket(`ws://localhost:${this.uiPort}/socket.io/?EIO=4&transport=websocket`);
+    // For now, just use HTTP polling as fallback
+    console.log('🔄 Socket.IO not available, using HTTP polling fallback');
+    this.setupHTTPPolling();
+  }
 
-    this.websocket.onopen = () => {
-      console.log('🚀 Connected to Pokemayne UI (WebSocket fallback)');
-      this.isConnected = true;
-      this.updateBadge();
-      this.startHeartbeat();
+  setupHTTPPolling() {
+    // Simple HTTP-based communication fallback
+    this.isConnected = true;
+    this.updateBadge();
 
-      // Send extension connection signal
-      this.websocket.send(JSON.stringify({
-        type: 'extension_connect',
-        data: {
-          extensionId: chrome.runtime.id,
-          version: chrome.runtime.getManifest().version
-        }
-      }));
-    };
+    // Send initial connection
+    this.sendHTTPMessage('extension_connect', {
+      extensionId: chrome.runtime.id,
+      version: chrome.runtime.getManifest().version
+    });
 
-    this.websocket.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
-        this.handleUIMessage(message);
-      } catch (error) {
-        console.error('Failed to parse WebSocket message:', error);
+    // Start polling for status
+    this.startStatusPolling();
+  }
+
+  async sendHTTPMessage(type, data) {
+    try {
+      const response = await fetch(`http://localhost:${this.uiPort}/api/extension/${type}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        console.warn(`HTTP message failed: ${response.status}`);
       }
-    };
-
-    this.websocket.onclose = () => {
-      console.log('❌ Disconnected from Pokemayne UI');
+    } catch (error) {
+      console.error('HTTP message failed:', error);
       this.isConnected = false;
       this.updateBadge();
-      this.stopHeartbeat();
-      this.scheduleReconnect();
+    }
+  }
+
+  startStatusPolling() {
+    // Poll every 5 seconds for status updates
+    this.statusInterval = setInterval(async () => {
+      try {
+        const response = await fetch(`http://localhost:${this.uiPort}/api/extension/status`);
+        if (response.ok) {
+          const status = await response.json();
+          if (status.command === 'start_recording' && !this.isRecording) {
+            await this.handleRecordingStart(status.sessionId);
+          } else if (status.command === 'stop_recording' && this.isRecording) {
+            await this.handleRecordingStop();
+          }
+        }
+      } catch (error) {
+        console.error('Status polling failed:', error);
+      }
+    }, 5000);
+  }
+
+  async handleRecordingStart(sessionId) {
+    this.sessionId = sessionId;
+    this.isRecording = true;
+    this.recordingData = {
+      actions: [],
+      network: [],
+      console: [],
+      dom: []
     };
 
-    this.websocket.onerror = (error) => {
-      console.error('WebSocket error:', error);
-      this.isConnected = false;
-      this.updateBadge();
-    };
+    await this.saveState();
+    this.updateBadge();
+
+    // Notify all content scripts to start recording
+    const tabs = await chrome.tabs.query({});
+    for (const tab of tabs) {
+      try {
+        await chrome.tabs.sendMessage(tab.id, {
+          type: 'start_recording',
+          sessionId: this.sessionId
+        });
+      } catch (error) {
+        console.debug(`Could not notify tab ${tab.id}:`, error.message);
+      }
+    }
+
+    console.log('🎬 Recording started:', sessionId);
+  }
+
+  async handleRecordingStop() {
+    this.isRecording = false;
+    this.sessionId = null;
+
+    await this.saveState();
+    this.updateBadge();
+
+    // Notify all content scripts to stop recording
+    const tabs = await chrome.tabs.query({});
+    for (const tab of tabs) {
+      try {
+        await chrome.tabs.sendMessage(tab.id, { type: 'stop_recording' });
+      } catch (error) {
+        console.debug(`Could not notify tab ${tab.id}:`, error.message);
+      }
+    }
+
+    console.log('🛑 Recording stopped');
   }
 
   scheduleReconnect() {
@@ -300,6 +366,12 @@ class PokemayneRecorder {
   sendToUI(message) {
     if (this.socket && this.socket.connected) {
       this.socket.emit('extension_recording_data', {
+        type: message.type,
+        payload: message.data || message
+      });
+    } else if (this.isConnected) {
+      // HTTP fallback
+      this.sendHTTPMessage('recording_data', {
         type: message.type,
         payload: message.data || message
       });
