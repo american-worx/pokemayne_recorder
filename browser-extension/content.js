@@ -24,10 +24,11 @@ class StealthRecorder {
     // Stealth: Avoid obvious event listeners by using capture phase
     this.setupStealthListeners();
 
-    console.debug('🎯 Pokemayne content script loaded');
+    console.log('🎯 Pokemayne content script loaded on:', window.location.href);
   }
 
   handleMessage(message) {
+    console.log('🎯 Content script received message:', message.type, message);
     switch (message.type) {
       case 'start_recording':
         this.startRecording(message.sessionId, message.config, message.resuming);
@@ -51,7 +52,7 @@ class StealthRecorder {
     // Start monitoring
     this.startMonitoring();
 
-    console.debug('🎬 Recording started in tab:', sessionId);
+    console.log('🎬 Recording started in tab:', sessionId, 'on URL:', window.location.href);
   }
 
   stopRecording() {
@@ -221,6 +222,7 @@ class StealthRecorder {
 
   // Recording methods
   recordClick(event) {
+    console.log('🎯 Recording click on:', event.target.tagName, event.target.id || event.target.className);
     const element = event.target;
     const rect = element.getBoundingClientRect();
 
@@ -419,13 +421,15 @@ class StealthRecorder {
   }
 
   sendToBackground(type, data) {
-    chrome.runtime.sendMessage({
+    const message = {
       type,
       data,
       timestamp: Date.now(),
       sessionId: this.sessionId
-    }).catch(() => {
-      // Background script might not be ready
+    };
+    console.log('🎯 Sending to background:', type, message);
+    chrome.runtime.sendMessage(message).catch((error) => {
+      console.error('Failed to send message to background:', error);
     });
   }
 }
