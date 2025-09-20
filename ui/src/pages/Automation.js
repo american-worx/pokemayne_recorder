@@ -408,7 +408,10 @@ const Automation = () => {
                       Success Rate
                     </Typography>
                     <Chip
-                      label="94%"
+                      label={automations.length > 0 ?
+                        `${Math.round((automations.filter(a => a.successRate > 80).length / automations.length) * 100)}%` :
+                        '0%'
+                      }
                       sx={{ bgcolor: '#00e676', color: 'black', fontWeight: 600 }}
                     />
                   </Box>
@@ -418,7 +421,10 @@ const Automation = () => {
                       Avg. Speed
                     </Typography>
                     <Chip
-                      label="24s"
+                      label={automations.length > 0 ?
+                        `${Math.round(automations.reduce((sum, a) => sum + (a.averageSpeed || 25), 0) / automations.length)}s` :
+                        '0s'
+                      }
                       sx={{ bgcolor: '#ff9800', color: 'black', fontWeight: 600 }}
                     />
                   </Box>

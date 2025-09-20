@@ -126,7 +126,7 @@ const Dashboard = ({ stats }) => {
                   </Avatar>
                   <Box>
                     <Typography variant="h4" sx={{ fontWeight: 700, color: '#ff5722' }}>
-                      {stats.activeRecordings || 2}
+                      {loading ? '...' : (realStats?.activeRecordings || stats?.activeRecordings || 0)}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'grey.400' }}>
                       Active Recordings
@@ -170,7 +170,7 @@ const Dashboard = ({ stats }) => {
                   </Avatar>
                   <Box>
                     <Typography variant="h4" sx={{ fontWeight: 700, color: '#4caf50' }}>
-                      {stats.activeMonitors || 15}
+                      {loading ? '...' : (realStats?.activeMonitors || stats?.activeMonitors || 0)}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'grey.400' }}>
                       Active Monitors
@@ -214,7 +214,7 @@ const Dashboard = ({ stats }) => {
                   </Avatar>
                   <Box>
                     <Typography variant="h4" sx={{ fontWeight: 700, color: '#2196f3' }}>
-                      {stats.totalAutomations || 47}
+                      {loading ? '...' : (realStats?.totalAutomations || stats?.totalAutomations || 0)}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'grey.400' }}>
                       Automations Run
@@ -258,7 +258,7 @@ const Dashboard = ({ stats }) => {
                   </Avatar>
                   <Box>
                     <Typography variant="h4" sx={{ fontWeight: 700, color: '#00e676' }}>
-                      {stats.successRate || 94}%
+                      {loading ? '...' : `${realStats?.successRate || stats?.successRate || 0}%`}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'grey.400' }}>
                       Success Rate
@@ -267,7 +267,7 @@ const Dashboard = ({ stats }) => {
                 </Box>
                 <LinearProgress
                   variant="determinate"
-                  value={94}
+                  value={realStats?.successRate || stats?.successRate || 0}
                   sx={{
                     height: 4,
                     borderRadius: 2,
