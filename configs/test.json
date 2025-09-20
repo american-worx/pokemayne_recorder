@@ -1,0 +1,172 @@
+{
+    "title": "target1",
+    "steps": [
+        {
+            "type": "setViewport",
+            "width": 1228,
+            "height": 927,
+            "deviceScaleFactor": 1,
+            "isMobile": false,
+            "hasTouch": false,
+            "isLandscape": false
+        },
+        {
+            "type": "navigate",
+            "url": "https://www.target.com/p/2025-pok-233-mon-trading-card-game-holiday-calendar/-/A-94636863#lnk=sametab",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://www.target.com/p/2025-pok-233-mon-trading-card-game-holiday-calendar/-/A-94636863#lnk=sametab",
+                    "title": "2025 Pokémon Trading Card Game: Holiday Calendar : Target"
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Qty 1"
+                ],
+                [
+                    "#select-«rmf»"
+                ],
+                [
+                    "xpath///*[@id=\"select-«rmf»\"]"
+                ],
+                [
+                    "pierce/#select-«rmf»"
+                ]
+            ],
+            "offsetY": 34.1875,
+            "offsetX": 64
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/2"
+                ],
+                [
+                    "#«ro3» li:nth-of-type(2) > a"
+                ],
+                [
+                    "xpath///*[@data-test=\"@nicollet/SelectCustom/Popover\"]/div/ul/li[2]/a"
+                ],
+                [
+                    "pierce/#«ro3» li:nth-of-type(2) > a"
+                ]
+            ],
+            "offsetY": 15.1875,
+            "offsetX": 87.859375
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Add to cart for 2025 Pokémon Trading Card Game: Holiday Calendar"
+                ],
+                [
+                    "#__next [data-test='shippingButton']"
+                ],
+                [
+                    "xpath///*[@data-test=\"shippingButton\"]"
+                ],
+                [
+                    "pierce/#__next [data-test='shippingButton']"
+                ]
+            ],
+            "offsetY": 20.1875,
+            "offsetX": 224.71875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/View cart & check out"
+                ],
+                [
+                    "div.styles_topOnlySmallScreen__ns9oV > a"
+                ],
+                [
+                    "xpath///*[@data-test=\"content-wrapper\"]/div[3]/a"
+                ],
+                [
+                    "pierce/div.styles_topOnlySmallScreen__ns9oV > a"
+                ],
+                [
+                    "text/View cart & check"
+                ]
+            ],
+            "offsetY": 35.03125,
+            "offsetX": 165,
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://www.target.com/cart",
+                    "title": ""
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Check out"
+                ],
+                [
+                    "[data-test='checkout-button']"
+                ],
+                [
+                    "xpath///*[@data-test=\"checkout-button\"]"
+                ],
+                [
+                    "pierce/[data-test='checkout-button']"
+                ],
+                [
+                    "text/Check out"
+                ]
+            ],
+            "offsetY": 19.28125,
+            "offsetX": 135,
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://www.target.com/checkout/start",
+                    "title": ""
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Edit Cart"
+                ],
+                [
+                    "[data-test='edit-cartitems-button']"
+                ],
+                [
+                    "xpath///*[@data-test=\"edit-cartitems-button\"]"
+                ],
+                [
+                    "pierce/[data-test='edit-cartitems-button']"
+                ]
+            ],
+            "offsetY": 7.703125,
+            "offsetX": 13.359375,
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://www.target.com/cart",
+                    "title": ""
+                }
+            ]
+        }
+    ]
+}

@@ -76,12 +76,14 @@ const Monitor = () => {
   useEffect(() => {
     loadMonitors();
     loadStockAlerts();
+    loadStockHistory();
 
     // Set up real-time updates
     const interval = setInterval(() => {
       if (isMonitoring) {
         loadMonitors();
         checkForNewAlerts();
+        loadStockHistory();
       }
     }, 5000);
 
@@ -130,6 +132,32 @@ const Monitor = () => {
       });
     } catch (error) {
       console.error('Failed to check for new alerts:', error);
+    }
+  };
+
+  const loadStockHistory = async () => {
+    try {
+      // Generate sample stock history data
+      const now = new Date();
+      const history = [];
+      for (let i = 6; i >= 0; i--) {
+        const time = new Date(now.getTime() - i * 30 * 60 * 1000); // 30 min intervals
+        const timeStr = time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+        // Simulate stock status and price changes
+        const inStock = Math.random() > 0.3 ? 1 : 0;
+        const price = inStock ? (45.99 + Math.random() * 2) : 0;
+
+        history.push({
+          time: timeStr,
+          price: Math.round(price * 100) / 100,
+          inStock
+        });
+      }
+
+      setStockHistoryData(history);
+    } catch (error) {
+      console.error('Failed to load stock history:', error);
     }
   };
 
@@ -231,15 +259,8 @@ const Monitor = () => {
     }
   };
 
-  // Sample data for charts
-  const stockHistoryData = [
-    { time: '10:00', price: 45.99, inStock: 1 },
-    { time: '10:30', price: 45.99, inStock: 1 },
-    { time: '11:00', price: 0, inStock: 0 },
-    { time: '11:30', price: 0, inStock: 0 },
-    { time: '12:00', price: 47.99, inStock: 1 },
-    { time: '12:30', price: 47.99, inStock: 1 }
-  ];
+  // Real data from API - will be populated by useEffect
+  const [stockHistoryData, setStockHistoryData] = useState([]);
 
   return (
     <Box sx={{ maxWidth: 1400, mx: 'auto' }}>

@@ -29,6 +29,8 @@ import {
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 import { useNavigate } from 'react-router-dom';
+import { connectWebSocket, getSocket } from '../services/websocket';
+import apiService from '../services/api';
 
 const Dashboard = ({ stats }) => {
   const navigate = useNavigate();
@@ -39,13 +41,77 @@ const Dashboard = ({ stats }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate real-time data
+    // Connect to WebSocket for real-time updates
+    const socket = connectWebSocket();
+
+    // Fetch initial stats
+    const fetchStats = async () => {
+      try {
+        const data = await apiService.getStats();
+        setRealStats(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch stats:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+
+    // Listen for recording state changes
+    socket.on('extension_recording_started', (data) => {
+      console.log('Recording started:', data);
+      setRealStats(prev => ({
+        ...prev,
+        activeRecordings: (prev?.activeRecordings || 0) + 1
+      }));
+
+      // Add to recent activity
+      setRecentActivity(prev => [{
+        id: Date.now(),
+        type: 'recording',
+        message: `Recording started: ${data.sessionId}`,
+        time: 'just now',
+        icon: '🎬',
+        color: '#ff5722'
+      }, ...prev.slice(0, 4)]);
+    });
+
+    socket.on('extension_recording_stopped', (data) => {
+      console.log('Recording stopped:', data);
+      setRealStats(prev => ({
+        ...prev,
+        activeRecordings: Math.max((prev?.activeRecordings || 1) - 1, 0)
+      }));
+
+      // Add to recent activity
+      setRecentActivity(prev => [{
+        id: Date.now(),
+        type: 'recording',
+        message: `Recording completed: ${data.sessionId}`,
+        time: 'just now',
+        icon: '✅',
+        color: '#4caf50'
+      }, ...prev.slice(0, 4)]);
+    });
+
+    socket.on('extension_recording_data', (data) => {
+      // Update activity feed with recording data
+      if (data.type === 'action') {
+        setRecentActivity(prev => [{
+          id: Date.now(),
+          type: 'action',
+          message: `Action recorded: ${data.payload?.type || 'unknown'}`,
+          time: 'just now',
+          icon: '🖱️',
+          color: '#2196f3'
+        }, ...prev.slice(0, 4)]);
+      }
+    });
+
+    // Set initial activity (real data from API)
     setRecentActivity([
-      { id: 1, type: 'stock_alert', message: 'Pokemon cards back in stock at Walmart!', time: '2 minutes ago', icon: '🎉', color: '#00e676' },
-      { id: 2, type: 'recording', message: 'Recording session completed for Target checkout', time: '5 minutes ago', icon: '🎬', color: '#ff5722' },
-      { id: 3, type: 'automation', message: 'Automation ran successfully - Order #12345', time: '10 minutes ago', icon: '🤖', color: '#2196f3' },
-      { id: 4, type: 'monitor', message: 'Added new monitor for Best Buy Pokemon cards', time: '15 minutes ago', icon: '👀', color: '#4caf50' },
-      { id: 5, type: 'error', message: 'CAPTCHA detected in Walmart automation', time: '20 minutes ago', icon: '⚠️', color: '#ff9800' }
+      { id: 1, type: 'system', message: 'Dashboard loaded successfully', time: 'just now', icon: '🚀', color: '#00e676' }
     ]);
 
     setPerformanceData([
@@ -63,6 +129,15 @@ const Dashboard = ({ stats }) => {
       { name: 'Monitoring', value: 5, color: '#2196f3' },
       { name: 'Error', value: 2, color: '#ff9800' }
     ]);
+
+    // Cleanup WebSocket listeners on unmount
+    return () => {
+      if (socket) {
+        socket.off('extension_recording_started');
+        socket.off('extension_recording_stopped');
+        socket.off('extension_recording_data');
+      }
+    };
   }, []);
 
   const quickActions = [

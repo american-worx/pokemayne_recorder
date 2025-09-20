@@ -579,6 +579,165 @@ class StealthyRecorder {
     return importantPatterns.some(pattern => url.includes(pattern));
   }
 
+  generateChromeDevToolsFormat() {
+    const steps = [
+      // Always start with viewport
+      {
+        type: "setViewport",
+        width: this.recordingData.session.viewport?.width || 1920,
+        height: this.recordingData.session.viewport?.height || 1080,
+        deviceScaleFactor: 1,
+        isMobile: false,
+        hasTouch: false,
+        isLandscape: false
+      }
+    ];
+
+    // Add initial navigation
+    if (this.recordingData.session.url) {
+      steps.push({
+        type: "navigate",
+        url: this.recordingData.session.url,
+        assertedEvents: [{
+          type: "navigation",
+          url: this.recordingData.session.url,
+          title: ""
+        }]
+      });
+    }
+
+    // Convert navigation events from security redirects
+    this.recordingData.security.redirects.forEach(redirect => {
+      if (redirect.url !== this.recordingData.session.url) {
+        steps.push({
+          type: "navigate",
+          url: redirect.url,
+          assertedEvents: [{
+            type: "navigation",
+            url: redirect.url,
+            title: ""
+          }]
+        });
+      }
+    });
+
+    // Convert actions to steps
+    this.recordingData.actions.forEach(action => {
+      const convertedSteps = this.convertActionToStep(action);
+      if (convertedSteps) {
+        if (Array.isArray(convertedSteps)) {
+          steps.push(...convertedSteps);
+        } else {
+          steps.push(convertedSteps);
+        }
+      }
+    });
+
+    return {
+      title: `Recording ${new Date(this.recordingData.session.startTime).toLocaleString()}`,
+      steps: steps,
+      metadata: {
+        originalFormat: {
+          sessionId: this.recordingData.session.id,
+          duration: Date.now() - this.recordingData.session.startTime,
+          networkRequests: this.recordingData.network.requests.length,
+          securityEvents: this.recordingData.security.captchas.length,
+          screenshots: this.recordingData.screenshots.length,
+          errors: this.recordingData.errors.length
+        }
+      }
+    };
+  }
+
+  convertActionToStep(action) {
+    switch (action.type) {
+      case 'click':
+        return {
+          type: "click",
+          target: action.target || "main",
+          selectors: action.selectors || this.generateSelectorsFromAction(action),
+          offsetX: action.offsetX || 0,
+          offsetY: action.offsetY || 0,
+          timestamp: action.timestamp
+        };
+
+      case 'keystroke':
+      case 'keydown':
+      case 'keyup':
+        if (action.key && action.key.length === 1) {
+          // Single character - treat as text input
+          return {
+            type: "change",
+            target: action.target || "main",
+            selectors: action.selectors || this.generateSelectorsFromAction(action),
+            value: action.value || action.key
+          };
+        } else {
+          // Special key - create keyDown/keyUp pair
+          return [
+            {
+              type: "keyDown",
+              target: action.target || "main",
+              key: action.key
+            },
+            {
+              type: "keyUp",
+              target: action.target || "main",
+              key: action.key
+            }
+          ];
+        }
+
+      case 'input':
+      case 'change':
+        return {
+          type: "change",
+          target: action.target || "main",
+          selectors: action.selectors || this.generateSelectorsFromAction(action),
+          value: action.value || ""
+        };
+
+      case 'navigation':
+        return {
+          type: "navigate",
+          url: action.url,
+          assertedEvents: [{
+            type: "navigation",
+            url: action.url,
+            title: action.title || ""
+          }]
+        };
+
+      default:
+        return null;
+    }
+  }
+
+  generateSelectorsFromAction(action) {
+    const selectors = [];
+
+    if (action.target && action.target.id) {
+      selectors.push([`#${action.target.id}`]);
+    }
+
+    if (action.target && action.target.name) {
+      selectors.push([`[name="${action.target.name}"]`]);
+    }
+
+    if (action.target && action.target.className) {
+      const classes = action.target.className.split(' ').filter(c => c.trim());
+      if (classes.length > 0) {
+        selectors.push([`.${classes.join('.')}`]);
+      }
+    }
+
+    if (action.target && action.target.tagName) {
+      selectors.push([action.target.tagName.toLowerCase()]);
+    }
+
+    return selectors.length > 0 ? selectors : [["body"]];
+  }
+
   async saveRecording() {
     try {
       await this.captureSessionData();
@@ -586,9 +745,14 @@ class StealthyRecorder {
       const outputPath = path.join(this.options.outputDir, this.options.sessionId);
       await fs.ensureDir(outputPath);
 
-      // Save main recording data
+      // Save original comprehensive format
       const recordingPath = path.join(outputPath, 'recording.json');
       await fs.writeJson(recordingPath, this.recordingData, { spaces: 2 });
+
+      // Save Chrome DevTools compatible format
+      const chromeFormat = this.generateChromeDevToolsFormat();
+      const chromePath = path.join(outputPath, 'chrome-devtools-recording.json');
+      await fs.writeJson(chromePath, chromeFormat, { spaces: 2 });
 
       // Save Playwright trace
       if (this.context) {
@@ -599,13 +763,14 @@ class StealthyRecorder {
 
       logger.recordAction('recording_saved', {
         path: recordingPath,
+        chromePath: chromePath,
         sessionId: this.options.sessionId,
         actions: this.recordingData.actions.length,
         requests: this.recordingData.network.requests.length,
         responses: this.recordingData.network.responses.length
       });
 
-      return recordingPath;
+      return { recordingPath, chromePath };
     } catch (error) {
       logger.recordError(error, { context: 'save_recording' });
       throw error;
@@ -626,7 +791,7 @@ class StealthyRecorder {
     await this.takeScreenshot();
 
     // Save final recording
-    const recordingPath = await this.saveRecording();
+    const { recordingPath, chromePath } = await this.saveRecording();
 
     // Cleanup browser resources
     await this.browserManager.cleanup(this.options.sessionId);
@@ -640,6 +805,7 @@ class StealthyRecorder {
     return {
       sessionId: this.options.sessionId,
       recordingPath,
+      chromePath,
       duration: Date.now() - this.recordingData.session.startTime,
       stats: {
         actions: this.recordingData.actions.length,
