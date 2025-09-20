@@ -702,7 +702,12 @@ class PokemayneAPI {
     this.app.post('/api/extension/recording_data', (req, res) => {
       const { type, payload } = req.body;
 
-      logger.info(`Extension recording data: ${type}`);
+      // Log detailed recording data
+      logger.info(`Extension recording data: ${type}`, {
+        type,
+        payloadSize: JSON.stringify(payload).length,
+        payload: payload
+      });
 
       // Forward to UI clients via WebSocket
       this.io.to('ui').emit('extension_recording_data', {
