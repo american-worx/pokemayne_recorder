@@ -35,6 +35,8 @@ const Dashboard = ({ stats }) => {
   const [recentActivity, setRecentActivity] = useState([]);
   const [performanceData, setPerformanceData] = useState([]);
   const [stockData, setStockData] = useState([]);
+  const [realStats, setRealStats] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Simulate real-time data
