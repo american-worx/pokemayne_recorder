@@ -7,6 +7,19 @@ class StealthRecorder {
     this.sessionId = null;
     this.injectedScript = null;
     this.lastActivity = Date.now();
+    this.stepCounter = 0;
+    this.recordingStartTime = null;
+    this.lastStepTime = null;
+    this.pendingNetworkRequests = new Map();
+    this.recentNetworkActivity = [];
+    this.viewportInfo = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      deviceScaleFactor: window.devicePixelRatio || 1,
+      isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+      hasTouch: 'ontouchstart' in window,
+      isLandscape: window.innerWidth > window.innerHeight
+    };
 
     // Stealth: Use random intervals to avoid detection
     this.captureInterval = 100 + Math.random() * 100; // 100-200ms
@@ -31,9 +44,11 @@ class StealthRecorder {
     console.log('🎯 Content script received message:', message.type, message);
     switch (message.type) {
       case 'start_recording':
+        console.log('🎬 Starting recording with sessionId:', message.sessionId);
         this.startRecording(message.sessionId, message.config, message.resuming);
         break;
       case 'stop_recording':
+        console.log('🛑 Stopping recording');
         this.stopRecording();
         break;
     }
@@ -45,6 +60,17 @@ class StealthRecorder {
     this.isRecording = true;
     this.sessionId = sessionId;
     this.lastActivity = Date.now();
+    this.recordingStartTime = Date.now();
+    this.lastStepTime = Date.now();
+    this.stepCounter = 0;
+    this.pendingNetworkRequests.clear();
+    this.recentNetworkActivity = [];
+
+    // Update viewport info
+    this.updateViewportInfo();
+
+    // Record initial viewport setup
+    this.recordInitialState();
 
     // Inject stealth recording script
     this.injectStealthScript();
@@ -57,6 +83,10 @@ class StealthRecorder {
 
   stopRecording() {
     this.isRecording = false;
+
+    // Export recording in Chrome DevTools format before cleanup
+    this.exportRecording();
+
     this.sessionId = null;
 
     // Remove injected script
@@ -67,6 +97,9 @@ class StealthRecorder {
 
     // Clean up listeners
     this.stopMonitoring();
+
+    // Restore original console methods
+    this.restoreConsole();
 
     console.debug('🛑 Recording stopped in tab');
   }
@@ -97,6 +130,7 @@ class StealthRecorder {
 
     // Click tracking
     document.addEventListener('click', (event) => {
+      console.log('🎯 Click detected, isRecording:', this.isRecording, 'sessionId:', this.sessionId);
       if (this.isRecording) {
         this.recordClick(event);
       }
@@ -116,10 +150,42 @@ class StealthRecorder {
       }
     }, options);
 
-    // Navigation
+    // Navigation tracking
+    let currentUrl = window.location.href;
+    const originalPushState = history.pushState;
+    const originalReplaceState = history.replaceState;
+
+    // Override history methods
+    history.pushState = (...args) => {
+      const result = originalPushState.apply(history, args);
+      if (this.isRecording && window.location.href !== currentUrl) {
+        currentUrl = window.location.href;
+        this.recordNavigation(currentUrl, document.title);
+      }
+      return result;
+    };
+
+    history.replaceState = (...args) => {
+      const result = originalReplaceState.apply(history, args);
+      if (this.isRecording && window.location.href !== currentUrl) {
+        currentUrl = window.location.href;
+        this.recordNavigation(currentUrl, document.title);
+      }
+      return result;
+    };
+
+    // Listen for popstate (back/forward)
+    window.addEventListener('popstate', () => {
+      if (this.isRecording && window.location.href !== currentUrl) {
+        currentUrl = window.location.href;
+        this.recordNavigation(currentUrl, document.title);
+      }
+    }, options);
+
+    // Track page unload
     document.addEventListener('beforeunload', () => {
       if (this.isRecording) {
-        this.recordNavigation('beforeunload');
+        this.recordNavigation('about:blank', 'Navigating away');
       }
     }, options);
 
@@ -187,65 +253,115 @@ class StealthRecorder {
       if (event.source !== window || !event.data.type) return;
 
       if (event.data.type === 'pokemayne_network' && this.isRecording) {
+        // Store network activity for correlation
+        this.recentNetworkActivity.push({
+          ...event.data.payload,
+          timestamp: Date.now()
+        });
+
+        // Keep only last 50 requests to prevent memory issues
+        if (this.recentNetworkActivity.length > 50) {
+          this.recentNetworkActivity = this.recentNetworkActivity.slice(-25);
+        }
+
         this.sendToBackground('record_network', event.data.payload);
       }
     });
   }
 
   setupConsoleMonitoring() {
-    // Override console methods to capture logs
-    const originalLog = console.log;
-    const originalError = console.error;
-    const originalWarn = console.warn;
+    // Store original console methods for restoration
+    if (!this.originalConsole) {
+      this.originalConsole = {
+        log: console.log,
+        error: console.error,
+        warn: console.warn
+      };
+    }
 
     console.log = (...args) => {
       if (this.isRecording) {
-        this.recordConsole('log', args);
+        try {
+          this.recordConsole('log', args);
+        } catch (e) {
+          // Prevent console recording from crashing the page
+        }
       }
-      return originalLog.apply(console, args);
+      return this.originalConsole.log.apply(console, args);
     };
 
     console.error = (...args) => {
       if (this.isRecording) {
-        this.recordConsole('error', args);
+        try {
+          this.recordConsole('error', args);
+        } catch (e) {
+          // Prevent console recording from crashing the page
+        }
       }
-      return originalError.apply(console, args);
+      return this.originalConsole.error.apply(console, args);
     };
 
     console.warn = (...args) => {
       if (this.isRecording) {
-        this.recordConsole('warn', args);
+        try {
+          this.recordConsole('warn', args);
+        } catch (e) {
+          // Prevent console recording from crashing the page
+        }
       }
-      return originalWarn.apply(console, args);
+      return this.originalConsole.warn.apply(console, args);
     };
   }
 
-  // Recording methods
+  restoreConsole() {
+    if (this.originalConsole) {
+      console.log = this.originalConsole.log;
+      console.error = this.originalConsole.error;
+      console.warn = this.originalConsole.warn;
+      this.originalConsole = null;
+    }
+  }
+
+  // Enhanced recording methods
   recordClick(event) {
     console.log('🎯 Recording click on:', event.target.tagName, event.target.id || event.target.className);
     const element = event.target;
     const rect = element.getBoundingClientRect();
+    const now = Date.now();
+    const duration = this.lastStepTime ? now - this.lastStepTime : 0;
 
     const actionData = {
       type: 'click',
+      target: window.location.href,
+      selectors: this.generateAdvancedSelectors(element),
+      offsetX: Math.round(event.clientX - rect.left),
+      offsetY: Math.round(event.clientY - rect.top),
+      duration: duration > 1000 ? duration : undefined, // Only include if > 1s
+      timestamp: now,
+      stepNumber: ++this.stepCounter,
       element: {
         tagName: element.tagName,
         id: element.id,
         className: element.className,
         textContent: element.textContent?.substring(0, 100),
         href: element.href,
-        value: element.value
+        value: element.value,
+        attributes: this.getRelevantAttributes(element)
       },
       coordinates: {
-        x: event.clientX,
-        y: event.clientY,
-        elementX: event.clientX - rect.left,
-        elementY: event.clientY - rect.top
+        clientX: event.clientX,
+        clientY: event.clientY,
+        pageX: event.pageX,
+        pageY: event.pageY,
+        screenX: event.screenX,
+        screenY: event.screenY
       },
-      selectors: this.generateSelectors(element),
-      url: window.location.href
+      networkActivity: this.getRecentNetworkActivity(),
+      url: window.location.href,
+      viewport: this.viewportInfo
     };
 
+    this.lastStepTime = now;
     this.sendToBackground('record_action', actionData);
   }
 
@@ -258,25 +374,35 @@ class StealthRecorder {
       return;
     }
 
+    const now = Date.now();
+    const duration = this.lastStepTime ? now - this.lastStepTime : 0;
+
     const actionData = {
-      type: 'keydown',
+      type: 'keyDown',
+      target: window.location.href,
       key: event.key,
       code: event.code,
       altKey: event.altKey,
       ctrlKey: event.ctrlKey,
       shiftKey: event.shiftKey,
       metaKey: event.metaKey,
+      timestamp: now,
+      stepNumber: ++this.stepCounter,
+      duration: duration > 1000 ? duration : undefined,
       element: {
         tagName: event.target.tagName,
         id: event.target.id,
         className: event.target.className,
         name: event.target.name,
-        type: event.target.type
+        type: event.target.type,
+        attributes: this.getRelevantAttributes(event.target)
       },
-      selectors: this.generateSelectors(event.target),
+      selectors: this.generateAdvancedSelectors(event.target),
+      networkActivity: this.getRecentNetworkActivity(),
       url: window.location.href
     };
 
+    this.lastStepTime = now;
     this.sendToBackground('record_action', actionData);
   }
 
@@ -312,15 +438,26 @@ class StealthRecorder {
     this.sendToBackground('record_action', actionData);
   }
 
-  recordNavigation(type) {
-    const actionData = {
-      type: 'navigation',
-      navigationType: type,
-      url: window.location.href,
-      referrer: document.referrer
+  recordNavigation(url, title = '') {
+    const now = Date.now();
+    const duration = this.lastStepTime ? now - this.lastStepTime : 0;
+
+    const navigationData = {
+      type: 'navigate',
+      url: url,
+      assertedEvents: [{
+        type: 'navigation',
+        url: url,
+        title: title || document.title
+      }],
+      timestamp: now,
+      stepNumber: ++this.stepCounter,
+      duration: duration > 1000 ? duration : undefined,
+      networkActivity: this.getRecentNetworkActivity()
     };
 
-    this.sendToBackground('record_action', actionData);
+    this.lastStepTime = now;
+    this.sendToBackground('record_action', navigationData);
   }
 
   recordScroll() {
@@ -335,22 +472,33 @@ class StealthRecorder {
   }
 
   recordDOMChange(mutations) {
-    const changeData = {
-      type: 'dom_change',
-      mutations: mutations.map(mutation => ({
-        type: mutation.type,
-        addedNodes: mutation.addedNodes.length,
-        removedNodes: mutation.removedNodes.length,
-        target: {
-          tagName: mutation.target.tagName,
-          id: mutation.target.id,
-          className: mutation.target.className
-        }
-      })),
-      url: window.location.href
-    };
+    // Prevent infinite recursion by checking if we're already processing DOM changes
+    if (this.processingDOMChange) return;
+    this.processingDOMChange = true;
 
-    this.sendToBackground('record_action', changeData);
+    try {
+      const changeData = {
+        type: 'dom_change',
+        mutations: mutations.slice(0, 10).map(mutation => ({ // Limit to 10 mutations max
+          type: mutation.type,
+          addedNodes: mutation.addedNodes.length,
+          removedNodes: mutation.removedNodes.length,
+          target: {
+            tagName: mutation.target?.tagName || 'unknown',
+            id: mutation.target?.id || '',
+            className: mutation.target?.className || ''
+          }
+        })),
+        url: window.location.href
+      };
+
+      this.sendToBackground('record_action', changeData);
+    } finally {
+      // Use setTimeout to prevent immediate re-triggering
+      setTimeout(() => {
+        this.processingDOMChange = false;
+      }, 100);
+    }
   }
 
   recordConsole(level, args) {
@@ -367,70 +515,302 @@ class StealthRecorder {
     this.sendToBackground('record_console', consoleData);
   }
 
-  generateSelectors(element) {
+  generateAdvancedSelectors(element) {
     const selectors = [];
 
-    // ID selector
-    if (element.id) {
-      selectors.push(`#${element.id}`);
+    // ARIA selector (highest priority for accessibility)
+    const ariaLabel = element.getAttribute('aria-label') || element.getAttribute('aria-labelledby');
+    const role = element.getAttribute('role');
+    if (ariaLabel) {
+      selectors.push([`aria/${ariaLabel}`]);
+    } else if (role) {
+      selectors.push([`aria/[role="${role}"]`]);
     }
 
-    // Class selector
-    if (element.className) {
-      const classes = element.className.split(' ').filter(c => c.trim());
-      if (classes.length > 0) {
-        selectors.push(`.${classes.join('.')}`);
+    // Text-based selector for links and buttons
+    const textContent = element.textContent?.trim();
+    if (textContent && ['A', 'BUTTON', 'INPUT'].includes(element.tagName) && textContent.length < 50) {
+      selectors.push([`text/${textContent}`]);
+    }
+
+    // CSS selectors array (fallback chain)
+    const cssSelectors = [];
+
+    // ID selector (most specific)
+    if (element.id && !element.id.includes(' ')) {
+      cssSelectors.push(`#${CSS.escape(element.id)}`);
+    }
+
+    // Data attributes (test-friendly)
+    ['data-testid', 'data-test', 'data-cy', 'data-qa'].forEach(attr => {
+      const value = element.getAttribute(attr);
+      if (value) {
+        cssSelectors.push(`[${attr}="${value}"]`);
+      }
+    });
+
+    // Class-based selector
+    if (element.className && typeof element.className === 'string') {
+      const classes = element.className.split(' ').filter(c => c.trim() && !c.match(/^(active|focus|hover|disabled)$/));
+      if (classes.length > 0 && classes.length < 4) {
+        cssSelectors.push(`.${classes.map(c => CSS.escape(c)).join('.')}`);
       }
     }
 
     // Attribute selectors
-    ['name', 'data-testid', 'data-test', 'aria-label'].forEach(attr => {
+    ['name', 'type', 'placeholder', 'title'].forEach(attr => {
       const value = element.getAttribute(attr);
-      if (value) {
-        selectors.push(`[${attr}="${value}"]`);
+      if (value && value.length < 50) {
+        cssSelectors.push(`[${attr}="${value}"]`);
       }
     });
 
-    // XPath
-    selectors.push(this.generateXPath(element));
+    // Positional selectors
+    if (element.parentNode) {
+      const siblings = Array.from(element.parentNode.children).filter(el => el.tagName === element.tagName);
+      if (siblings.length > 1) {
+        const index = siblings.indexOf(element) + 1;
+        cssSelectors.push(`${element.tagName.toLowerCase()}:nth-of-type(${index})`);
+      }
+    }
+
+    if (cssSelectors.length > 0) {
+      selectors.push(cssSelectors);
+    }
+
+    // XPath selector
+    const xpath = this.generateXPath(element);
+    if (xpath) {
+      selectors.push([xpath]);
+    }
+
+    // Pierce selectors for shadow DOM
+    const pierceSelector = this.generatePierceSelector(element);
+    if (pierceSelector) {
+      selectors.push([pierceSelector]);
+    }
 
     return selectors;
   }
 
   generateXPath(element) {
-    if (element.id) {
-      return `//*[@id="${element.id}"]`;
+    if (element.id && !element.id.includes(' ')) {
+      return `xpath///*[@id="${element.id}"]`;
+    }
+
+    // Try to find a unique attribute path first
+    const uniqueAttrs = ['data-testid', 'data-test', 'name'];
+    for (const attr of uniqueAttrs) {
+      const value = element.getAttribute(attr);
+      if (value) {
+        return `xpath///*[@${attr}="${value}"]`;
+      }
     }
 
     const parts = [];
     let current = element;
+    let depth = 0;
+    const maxDepth = 8; // Shorter paths for better maintainability
 
-    while (current && current.nodeType === Node.ELEMENT_NODE) {
+    while (current && current.nodeType === Node.ELEMENT_NODE && depth < maxDepth) {
       const tagName = current.tagName.toLowerCase();
+
+      // Check for unique identifiers at this level
+      if (current.id && !current.id.includes(' ')) {
+        parts.unshift(`*[@id="${current.id}"]`);
+        break;
+      }
+
+      // Use class if it's stable-looking (no dynamic classes)
+      if (current.className && typeof current.className === 'string') {
+        const classes = current.className.split(' ').filter(c =>
+          c.trim() && !c.match(/^(active|focus|hover|disabled|selected|\d+)$/)
+        );
+        if (classes.length > 0 && classes.length < 3) {
+          const classSelector = classes.map(c => `contains(@class,"${c}")`).join(' and ');
+          parts.unshift(`${tagName}[${classSelector}]`);
+          depth++;
+          current = current.parentNode;
+          continue;
+        }
+      }
+
+      // Fallback to positional
       const siblings = Array.from(current.parentNode?.children || [])
         .filter(child => child.tagName === current.tagName);
 
-      const index = siblings.indexOf(current) + 1;
-      const part = siblings.length > 1 ? `${tagName}[${index}]` : tagName;
+      if (siblings.length > 1) {
+        const index = siblings.indexOf(current) + 1;
+        parts.unshift(`${tagName}[${index}]`);
+      } else {
+        parts.unshift(tagName);
+      }
 
-      parts.unshift(part);
       current = current.parentNode;
+      depth++;
     }
 
-    return '/' + parts.join('/');
+    return 'xpath//' + parts.join('/');
+  }
+
+  // New helper methods
+  updateViewportInfo() {
+    this.viewportInfo = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      deviceScaleFactor: window.devicePixelRatio || 1,
+      isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+      hasTouch: 'ontouchstart' in window,
+      isLandscape: window.innerWidth > window.innerHeight
+    };
+  }
+
+  recordInitialState() {
+    const initialStep = {
+      type: 'setViewport',
+      width: this.viewportInfo.width,
+      height: this.viewportInfo.height,
+      deviceScaleFactor: this.viewportInfo.deviceScaleFactor,
+      isMobile: this.viewportInfo.isMobile,
+      hasTouch: this.viewportInfo.hasTouch,
+      isLandscape: this.viewportInfo.isLandscape,
+      timestamp: this.recordingStartTime,
+      stepNumber: ++this.stepCounter
+    };
+
+    this.sendToBackground('record_action', initialStep);
+  }
+
+  getRelevantAttributes(element) {
+    const attrs = {};
+    const relevantAttrs = ['role', 'aria-label', 'aria-labelledby', 'data-testid', 'data-test', 'name', 'type', 'href', 'src', 'alt', 'title', 'placeholder'];
+
+    relevantAttrs.forEach(attr => {
+      const value = element.getAttribute(attr);
+      if (value && value.length < 100) {
+        attrs[attr] = value;
+      }
+    });
+
+    return attrs;
+  }
+
+  generatePierceSelector(element) {
+    // Generate pierce selectors for shadow DOM elements
+    const path = [];
+    let current = element;
+
+    while (current && current !== document.body) {
+      if (current.id) {
+        path.unshift(`#${CSS.escape(current.id)}`);
+        break;
+      }
+
+      if (current.className && typeof current.className === 'string') {
+        const classes = current.className.split(' ').filter(c => c.trim()).slice(0, 2);
+        if (classes.length > 0) {
+          path.unshift(`.${classes.map(c => CSS.escape(c)).join('.')}`);
+          current = current.parentNode;
+          continue;
+        }
+      }
+
+      const tagName = current.tagName.toLowerCase();
+      const siblings = Array.from(current.parentNode?.children || []);
+      const sameTagSiblings = siblings.filter(s => s.tagName === current.tagName);
+
+      if (sameTagSiblings.length > 1) {
+        const index = sameTagSiblings.indexOf(current) + 1;
+        path.unshift(`${tagName}:nth-of-type(${index})`);
+      } else {
+        path.unshift(tagName);
+      }
+
+      current = current.parentNode;
+      if (path.length > 5) break; // Limit depth
+    }
+
+    return path.length > 0 ? `pierce/${path.join(' > ')}` : null;
+  }
+
+  getRecentNetworkActivity() {
+    const cutoff = Date.now() - 5000; // Last 5 seconds
+    return this.recentNetworkActivity
+      .filter(req => req.timestamp > cutoff)
+      .slice(-5) // Max 5 recent requests
+      .map(req => ({
+        url: req.url,
+        method: req.method,
+        status: req.status,
+        type: req.type,
+        timestamp: req.timestamp
+      }));
+  }
+
+  correlateNetworkWithEvent(eventType) {
+    // Find network requests that might be related to this event
+    const correlatedRequests = [];
+
+    if (eventType === 'click' || eventType === 'submit') {
+      // Look for XHR/fetch requests shortly after
+      const futureRequests = this.recentNetworkActivity.filter(
+        req => req.timestamp > Date.now() - 1000 &&
+               (req.type === 'xhr' || req.type === 'fetch')
+      );
+      correlatedRequests.push(...futureRequests);
+    }
+
+    return correlatedRequests;
+  }
+
+  exportRecording() {
+    // Create Chrome DevTools compatible recording format
+    const recording = {
+      title: `Recording ${new Date().toLocaleString()}`,
+      steps: this.recordedSteps || []
+    };
+
+    // Send final recording export
+    this.sendToBackground('export_recording', recording);
+    console.log('📥 Exported recording with', recording.steps.length, 'steps');
   }
 
   sendToBackground(type, data) {
+    // Store steps for final export
+    if (type === 'record_action' && data.type !== 'console') {
+      if (!this.recordedSteps) this.recordedSteps = [];
+      this.recordedSteps.push(data);
+    }
+
+    // Throttle messages to prevent overwhelming the background script
+    const now = Date.now();
+    if (this.lastMessageTime && now - this.lastMessageTime < 50) { // Max 20 messages/second
+      return;
+    }
+    this.lastMessageTime = now;
+
     const message = {
       type,
       data,
-      timestamp: Date.now(),
+      timestamp: now,
       sessionId: this.sessionId
     };
+
+    // Limit message size to prevent memory issues
+    const messageSize = JSON.stringify(message).length;
+    if (messageSize > 50000) { // 50KB limit
+      console.warn('🎯 Message too large, skipping:', type, messageSize);
+      return;
+    }
+
     console.log('🎯 Sending to background:', type, message);
-    chrome.runtime.sendMessage(message).catch((error) => {
+    try {
+      chrome.runtime.sendMessage(message).catch((error) => {
+        console.error('Failed to send message to background:', error);
+      });
+    } catch (error) {
       console.error('Failed to send message to background:', error);
-    });
+    }
   }
 }
 

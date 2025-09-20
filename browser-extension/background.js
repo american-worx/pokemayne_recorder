@@ -270,19 +270,33 @@ class PokemayneRecorder {
 
   async sendHTTPMessage(type, data) {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
       const response = await fetch(`${this.getServerUrl()}/api/extension/${type}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
+
       if (!response.ok) {
-        console.warn(`HTTP message failed: ${response.status}`);
+        console.warn(`HTTP message failed: ${response.status} ${response.statusText}`);
+        if (response.status >= 500) {
+          this.isConnected = false;
+          this.updateBadge();
+        }
       }
     } catch (error) {
-      console.error('HTTP message failed:', error);
+      if (error.name === 'AbortError') {
+        console.warn('HTTP message timed out');
+      } else {
+        console.error('HTTP message failed:', error.message);
+      }
       this.isConnected = false;
       this.updateBadge();
     }
@@ -290,13 +304,19 @@ class PokemayneRecorder {
 
   async sendHTTPStartRecording(config) {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+
       const response = await fetch(`${this.getServerUrl()}/api/extension/start_recording`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ config })
+        body: JSON.stringify({ config }),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const result = await response.json();
@@ -317,12 +337,14 @@ class PokemayneRecorder {
 
         // Notify all content scripts to start recording
         const tabs = await chrome.tabs.query({});
+        console.log('🎬 HTTP: Notifying', tabs.length, 'tabs to start recording with sessionId:', this.sessionId);
         for (const tab of tabs) {
           try {
             await chrome.tabs.sendMessage(tab.id, {
               type: 'start_recording',
               sessionId: this.sessionId
             });
+            console.log('✅ HTTP: Successfully notified tab', tab.id, 'to start recording');
           } catch (error) {
             console.debug(`Could not notify tab ${tab.id}:`, error.message);
           }
@@ -331,7 +353,11 @@ class PokemayneRecorder {
         console.error('HTTP start recording failed:', response.status);
       }
     } catch (error) {
-      console.error('HTTP start recording failed:', error);
+      if (error.name === 'AbortError') {
+        console.warn('HTTP start recording timed out');
+      } else {
+        console.error('HTTP start recording failed:', error.message);
+      }
       this.isConnected = false;
       this.updateBadge();
     }
@@ -339,13 +365,19 @@ class PokemayneRecorder {
 
   async sendHTTPStopRecording() {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+
       const response = await fetch(`${this.getServerUrl()}/api/extension/stop_recording`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({})
+        body: JSON.stringify({}),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const result = await response.json();
@@ -371,7 +403,11 @@ class PokemayneRecorder {
         console.error('HTTP stop recording failed:', response.status);
       }
     } catch (error) {
-      console.error('HTTP stop recording failed:', error);
+      if (error.name === 'AbortError') {
+        console.warn('HTTP stop recording timed out');
+      } else {
+        console.error('HTTP stop recording failed:', error.message);
+      }
       this.isConnected = false;
       this.updateBadge();
     }
@@ -381,7 +417,15 @@ class PokemayneRecorder {
     // Poll every 5 seconds for status updates
     this.statusInterval = setInterval(async () => {
       try {
-        const response = await fetch(`${this.getServerUrl()}/api/extension/status`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second timeout (less than polling interval)
+
+        const response = await fetch(`${this.getServerUrl()}/api/extension/status`, {
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
         if (response.ok) {
           const status = await response.json();
           if (status.command === 'start_recording' && !this.isRecording) {
@@ -398,7 +442,11 @@ class PokemayneRecorder {
           }
         }
       } catch (error) {
-        console.error('Status polling failed:', error);
+        if (error.name === 'AbortError') {
+          console.warn('Status polling timed out');
+        } else {
+          console.error('Status polling failed:', error.message);
+        }
         this.isConnected = false;
         this.updateBadge();
 
@@ -478,10 +526,10 @@ class PokemayneRecorder {
 
   startHeartbeat() {
     this.heartbeatInterval = setInterval(() => {
-      if (this.isConnected && this.socket.connected) {
-        this.socket.emit('extension_recording_data', {
+      if (this.isConnected) {
+        this.sendToUI({
           type: 'heartbeat',
-          payload: { timestamp: Date.now() }
+          data: { timestamp: Date.now() }
         });
       }
     }, 30000); // Heartbeat every 30 seconds
@@ -523,9 +571,9 @@ class PokemayneRecorder {
         this.sendStatus();
         break;
       case 'ping':
-        this.socket.emit('extension_recording_data', {
+        this.sendToUI({
           type: 'pong',
-          payload: { timestamp: Date.now() }
+          data: { timestamp: Date.now() }
         });
         break;
     }
@@ -647,25 +695,25 @@ class PokemayneRecorder {
     switch (message.type) {
       case 'record_action':
         this.recordingData.actions.push(recordingEntry);
-        this.socket.emit('extension_recording_data', {
+        this.sendToUI({
           type: 'action',
-          payload: recordingEntry
+          data: recordingEntry
         });
         break;
 
       case 'record_network':
         this.recordingData.network.push(recordingEntry);
-        this.socket.emit('extension_recording_data', {
+        this.sendToUI({
           type: 'network',
-          payload: recordingEntry
+          data: recordingEntry
         });
         break;
 
       case 'record_console':
         this.recordingData.console.push(recordingEntry);
-        this.socket.emit('extension_recording_data', {
+        this.sendToUI({
           type: 'console',
-          payload: recordingEntry
+          data: recordingEntry
         });
         break;
     }

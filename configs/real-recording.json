@@ -1,0 +1,1917 @@
+{
+    "title": "Recording 9/13/2025 at 9:40:59 PM",
+    "steps": [
+        {
+            "type": "setViewport",
+            "width": 830,
+            "height": 959,
+            "deviceScaleFactor": 1,
+            "isMobile": false,
+            "hasTouch": false,
+            "isLandscape": false
+        },
+        {
+            "type": "navigate",
+            "url": "https://www.target.com/p/pok-233-mon-trading-card-game-scarlet-38-violet-stellar-crown-elite-trainer-box/-/A-91619912?afid=Mavely&cpng=&lnm=81938&ref=tgt_adv_xasd0002&clkid=f6df9512N8dff11f086b2d135acc6f9e4&TCID=AFL-f6df9512N8dff11f086b2d135acc6f9e4",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://www.target.com/p/pok-233-mon-trading-card-game-scarlet-38-violet-stellar-crown-elite-trainer-box/-/A-91619912?afid=Mavely&cpng=&lnm=81938&ref=tgt_adv_xasd0002&clkid=f6df9512N8dff11f086b2d135acc6f9e4&TCID=AFL-f6df9512N8dff11f086b2d135acc6f9e4",
+                    "title": "Pokémon Trading Card Game: Scarlet & Violet - Stellar Crown Elite Trainer Box : Target"
+                }
+            ]
+        },
+        {
+            "type": "navigate",
+            "url": "chrome://new-tab-page/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "chrome://new-tab-page/",
+                    "title": "New Tab"
+                }
+            ]
+        },
+        {
+            "type": "navigate",
+            "url": "chrome://extensions/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "chrome://extensions/",
+                    "title": ""
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#loadUnpacked",
+                    "#content"
+                ],
+                [
+                    "pierce/#loadUnpacked",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 11,
+            "offsetX": 67
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#enableToggle"
+                ],
+                [
+                    "pierce/#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "pierce/#enableToggle"
+                ]
+            ],
+            "offsetY": 4.984375,
+            "offsetX": 13.5
+        },
+        {
+            "type": "navigate",
+            "url": "chrome://new-tab-page/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "chrome://new-tab-page/",
+                    "title": "New Tab"
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#errors-button",
+                    "#content"
+                ],
+                [
+                    "pierce/#errors-button",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 18.984375,
+            "offsetX": 26.28125
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#errorsList > div"
+                ],
+                [
+                    "pierce/#errorsList > div"
+                ]
+            ],
+            "offsetY": 182,
+            "offsetX": 279,
+            "duration": 3111
+        },
+        {
+            "type": "keyDown",
+            "target": "chrome://extensions/",
+            "key": "Control"
+        },
+        {
+            "type": "keyDown",
+            "target": "chrome://extensions/",
+            "key": "c"
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "chrome://extensions/"
+        },
+        {
+            "type": "keyUp",
+            "key": "c",
+            "target": "chrome://extensions/"
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "cr-button",
+                    "#content"
+                ],
+                [
+                    "pierce/extensions-error-page",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 17,
+            "offsetX": 35.890625
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#loadUnpacked",
+                    "#content"
+                ],
+                [
+                    "pierce/#loadUnpacked",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 18,
+            "offsetX": 63
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#closeButton",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#closeButton",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 17,
+            "offsetX": 22
+        },
+        {
+            "type": "navigate",
+            "url": "chrome://new-tab-page/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "chrome://new-tab-page/",
+                    "title": "New Tab"
+                }
+            ]
+        },
+        {
+            "type": "navigate",
+            "url": "chrome://extensions/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "chrome://extensions/",
+                    "title": ""
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#loadUnpacked",
+                    "#content"
+                ],
+                [
+                    "pierce/#loadUnpacked",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 6,
+            "offsetX": 50
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "aria/Errors"
+                ],
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#errors-button"
+                ],
+                [
+                    "pierce/#errors-button"
+                ]
+            ],
+            "offsetY": 14.984375,
+            "offsetX": 58.78125
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "aria/Clear all"
+                ],
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "cr-button"
+                ],
+                [
+                    "pierce/extensions-error-page",
+                    "pierce/cr-button"
+                ]
+            ],
+            "offsetY": 30,
+            "offsetX": 49.234375
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "aria/Load unpacked"
+                ],
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#loadUnpacked"
+                ],
+                [
+                    "pierce/#loadUnpacked"
+                ]
+            ],
+            "offsetY": 29,
+            "offsetX": 62
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#closeButton",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#closeButton",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 18,
+            "offsetX": 18.671875
+        },
+        {
+            "type": "navigate",
+            "url": "chrome://new-tab-page/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "chrome://new-tab-page/",
+                    "title": "New Tab"
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#enableToggle"
+                ],
+                [
+                    "pierce/#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "pierce/#enableToggle"
+                ]
+            ],
+            "offsetY": 11.984375,
+            "offsetX": 15
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#enableToggle"
+                ],
+                [
+                    "pierce/#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "pierce/#enableToggle"
+                ]
+            ],
+            "offsetY": 9.984375,
+            "offsetX": 15
+        },
+        {
+            "type": "navigate",
+            "url": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+                    "title": ""
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-detail-view",
+                    "#dev-reload-button",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/extensions-detail-view",
+                    "pierce/#dev-reload-button",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 14,
+            "offsetX": 22.515625
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-detail-view",
+                    "#closeButton",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#closeButton",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 8,
+            "offsetX": 13.515625
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#dev-reload-button",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#items-list",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 8.984375,
+            "offsetX": 16
+        },
+        {
+            "type": "click",
+            "target": "chrome://new-tab-page/",
+            "selectors": [
+                [
+                    "ntp-app",
+                    "#content"
+                ],
+                [
+                    "pierce/ntp-app",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 608,
+            "offsetX": 749
+        },
+        {
+            "type": "navigate",
+            "url": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+                    "title": ""
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-detail-view",
+                    "#closeButton",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#closeButton",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 15,
+            "offsetX": 28.515625
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#loadUnpacked",
+                    "#content"
+                ],
+                [
+                    "pierce/#loadUnpacked",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 6,
+            "offsetX": 45
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#loadUnpacked",
+                    "#content"
+                ],
+                [
+                    "pierce/#loadUnpacked",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 9,
+            "offsetX": 84
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#errors-button",
+                    "#content"
+                ],
+                [
+                    "pierce/#errors-button",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 6.984375,
+            "offsetX": 18.78125
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "cr-button",
+                    "#content"
+                ],
+                [
+                    "pierce/extensions-error-page",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 1,
+            "offsetX": 38.234375
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#closeButton",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/extensions-error-page",
+                    "pierce/#closeButton",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 15,
+            "offsetX": 19.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#dev-reload-button",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#items-list",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 11.984375,
+            "offsetX": 8
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#errors-button",
+                    "#content"
+                ],
+                [
+                    "pierce/#errors-button",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 7.984375,
+            "offsetX": 20.78125
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "aria/Warning Service worker registration failed. Status code: 15"
+                ],
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#errorsList > div:nth-of-type(1) div.start"
+                ],
+                [
+                    "pierce/#errorsList > div:nth-of-type(1) div.start"
+                ]
+            ],
+            "offsetY": 30,
+            "offsetX": 39.671875,
+            "duration": 3176
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#\\35 "
+                ],
+                [
+                    "pierce/#\\35 "
+                ]
+            ],
+            "offsetY": 5.015625,
+            "offsetX": 309.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#\\37 "
+                ],
+                [
+                    "pierce/#\\37 "
+                ]
+            ],
+            "offsetY": 5.015625,
+            "offsetX": 390.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "cr-button",
+                    "#content"
+                ],
+                [
+                    "pierce/extensions-error-page",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 13,
+            "offsetX": 25.234375
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#closeButton",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/extensions-error-page",
+                    "pierce/#closeButton",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 21,
+            "offsetX": 18.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#dev-reload-button",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#items-list",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 11.984375,
+            "offsetX": 12
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#errors-button",
+                    "#content"
+                ],
+                [
+                    "pierce/#errors-button",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 11.984375,
+            "offsetX": 30.78125
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "aria/Warning Service worker registration failed. Status code: 15"
+                ],
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#errorsList > div:nth-of-type(1) div.start"
+                ],
+                [
+                    "pierce/#errorsList > div:nth-of-type(1) div.start"
+                ]
+            ],
+            "offsetY": 22,
+            "offsetX": 359.671875,
+            "duration": 1072
+        },
+        {
+            "type": "keyDown",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "key": "Control"
+        },
+        {
+            "type": "keyDown",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "key": "c"
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm"
+        },
+        {
+            "type": "keyUp",
+            "key": "c",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm"
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#\\38 "
+                ],
+                [
+                    "pierce/#\\38 "
+                ]
+            ],
+            "offsetY": 6.015625,
+            "offsetX": 261.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "aria/Warning Service worker registration failed. Status code: 15"
+                ],
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#errorsList > div:nth-of-type(1) div.start"
+                ],
+                [
+                    "pierce/#errorsList > div:nth-of-type(1) div.start"
+                ]
+            ],
+            "offsetY": 38,
+            "offsetX": 138.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "aria/Error Uncaught ReferenceError: window is not defined"
+                ],
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#errorsList > div:nth-of-type(2) div.start"
+                ],
+                [
+                    "pierce/#errorsList > div:nth-of-type(2) div.start"
+                ]
+            ],
+            "offsetY": 9,
+            "offsetX": 114.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#errorsList > div:nth-of-type(2)"
+                ],
+                [
+                    "pierce/#errorsList > div:nth-of-type(2)"
+                ]
+            ],
+            "offsetY": 174,
+            "offsetX": 277.671875,
+            "duration": 1528
+        },
+        {
+            "type": "keyDown",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "key": "Control"
+        },
+        {
+            "type": "keyDown",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "key": "c"
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm"
+        },
+        {
+            "type": "keyUp",
+            "key": "c",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm"
+        },
+        {
+            "type": "click",
+            "target": "https://www.target.com/p/pok-233-mon-trading-card-game-mega-evolution-booster-display/-/A-94886127?clkid=f6df9512N8dff11f086b2d135acc6f9e4&cpng=&TCID=AFL-f6df9512N8dff11f086b2d135acc6f9e4&lnm=81938&afid=Mavely&ref=tgt_adv_xasd0002",
+            "selectors": [
+                [
+                    "body > div:nth-of-type(16)"
+                ],
+                [
+                    "xpath//html/body/div[16]"
+                ],
+                [
+                    "pierce/body > div:nth-of-type(16)"
+                ],
+                [
+                    "text/♿ Assistive Shopping"
+                ]
+            ],
+            "offsetY": 18,
+            "offsetX": 103.0625
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "aria/Load unpacked"
+                ],
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#loadUnpacked"
+                ],
+                [
+                    "pierce/#loadUnpacked"
+                ]
+            ],
+            "offsetY": 32,
+            "offsetX": 87
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "cr-button",
+                    "#content"
+                ],
+                [
+                    "pierce/extensions-error-page",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 10,
+            "offsetX": 11.234375
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-error-page",
+                    "#closeButton",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/extensions-error-page",
+                    "pierce/#closeButton",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 25,
+            "offsetX": 22.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#dev-reload-button",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#items-list",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 17.984375,
+            "offsetX": 0
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#dev-reload-button",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#items-list",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 16.984375,
+            "offsetX": 23
+        },
+        {
+            "type": "navigate",
+            "url": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+                    "title": "Extensions"
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#updateNow",
+                    "#content"
+                ],
+                [
+                    "pierce/#updateNow",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 14,
+            "offsetX": 17.109375
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "aria/Keyboard shortcuts"
+                ],
+                [
+                    "extensions-manager",
+                    "extensions-sidebar",
+                    "#sectionsShortcuts"
+                ],
+                [
+                    "pierce/#sectionsShortcuts"
+                ]
+            ],
+            "offsetY": 14,
+            "offsetX": 185
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "aria/My extensions"
+                ],
+                [
+                    "extensions-manager",
+                    "extensions-sidebar",
+                    "#sectionsExtensions"
+                ],
+                [
+                    "pierce/#sectionsExtensions"
+                ]
+            ],
+            "offsetY": 8,
+            "offsetX": 122
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#detailsButton"
+                ],
+                [
+                    "pierce/#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "pierce/#detailsButton"
+                ]
+            ],
+            "offsetY": 31.984375,
+            "offsetX": 46
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-detail-view",
+                    "#closeButton",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#closeButton",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 28,
+            "offsetX": 23.515625
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "aria/Load unpacked"
+                ],
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#loadUnpacked"
+                ],
+                [
+                    "pierce/#loadUnpacked"
+                ]
+            ],
+            "offsetY": 29,
+            "offsetX": 61
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#load-error",
+                    "cr-button.action-button",
+                    "#content"
+                ],
+                [
+                    "pierce/cr-button.action-button",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 3,
+            "offsetX": 16.625
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#load-error",
+                    "cr-button.action-button",
+                    "#content"
+                ],
+                [
+                    "pierce/cr-button.action-button",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 8,
+            "offsetX": 14.625
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#load-error",
+                    "cr-button.cancel-button",
+                    "#content"
+                ],
+                [
+                    "pierce/cr-button.cancel-button",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 11,
+            "offsetX": 33.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "aria/Load unpacked"
+                ],
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#loadUnpacked"
+                ],
+                [
+                    "pierce/#loadUnpacked"
+                ]
+            ],
+            "offsetY": 28,
+            "offsetX": 66
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#load-error",
+                    "#dialog > div:nth-of-type(2)"
+                ],
+                [
+                    "pierce/#dialog > div:nth-of-type(2)"
+                ]
+            ],
+            "offsetY": 6,
+            "offsetX": 12,
+            "duration": 4104
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "aria/Retry"
+                ],
+                [
+                    "extensions-manager",
+                    "#load-error",
+                    "cr-button.action-button"
+                ],
+                [
+                    "pierce/cr-button.action-button"
+                ]
+            ],
+            "offsetY": 14,
+            "offsetX": 14.8125
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#load-error",
+                    "cr-button.action-button",
+                    "#content"
+                ],
+                [
+                    "pierce/cr-button.action-button",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 6,
+            "offsetX": 11.625
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#load-error",
+                    "cr-button.cancel-button",
+                    "#content"
+                ],
+                [
+                    "pierce/cr-button.cancel-button",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 10,
+            "offsetX": 38.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#loadUnpacked",
+                    "#content"
+                ],
+                [
+                    "pierce/#loadUnpacked",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 11,
+            "offsetX": 51
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#load-error",
+                    "cr-button.cancel-button",
+                    "#content"
+                ],
+                [
+                    "pierce/cr-button.cancel-button",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 18,
+            "offsetX": 31.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#loadUnpacked",
+                    "#content"
+                ],
+                [
+                    "pierce/#loadUnpacked",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 12,
+            "offsetX": 46
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#dev-reload-button",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#items-list",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 21.984375,
+            "offsetX": 21
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#detailsButton",
+                    "#content"
+                ],
+                [
+                    "pierce/#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "pierce/#detailsButton",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 2.984375,
+            "offsetX": 1
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-detail-view",
+                    "#allow-incognito"
+                ],
+                [
+                    "pierce/#allow-incognito"
+                ]
+            ],
+            "offsetY": 61.734375,
+            "offsetX": 652.515625
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "aria/Allow in Incognito Warning: Google Chrome cannot prevent extensions from recording your browsing history. To disable this extension in Incognito mode, unselect this option. Changes to this setting will be applied once Chrome restarts. "
+                ],
+                [
+                    "extensions-manager",
+                    "extensions-detail-view",
+                    "#allow-incognito",
+                    "#crToggle"
+                ],
+                [
+                    "pierce/#allow-incognito",
+                    "pierce/#crToggle"
+                ]
+            ],
+            "offsetY": 11.71875,
+            "offsetX": 10.515625
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#container"
+                ],
+                [
+                    "pierce/extensions-manager",
+                    "pierce/#container"
+                ]
+            ],
+            "offsetY": 578,
+            "offsetX": 1533,
+            "duration": 848
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "extensions-detail-view",
+                    "#closeButton",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#closeButton",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 20,
+            "offsetX": 19
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#toolbar",
+                    "#loadUnpacked",
+                    "#content"
+                ],
+                [
+                    "pierce/#loadUnpacked",
+                    "pierce/#content"
+                ]
+            ],
+            "offsetY": 5,
+            "offsetX": 68
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#dev-reload-button",
+                    "#maskedImage"
+                ],
+                [
+                    "pierce/#items-list",
+                    "pierce/#maskedImage"
+                ]
+            ],
+            "offsetY": 7.984375,
+            "offsetX": 16.75
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#button-strip"
+                ],
+                [
+                    "pierce/#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "pierce/#button-strip"
+                ]
+            ],
+            "offsetY": 32.984375,
+            "offsetX": 364.75
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#enableToggle"
+                ],
+                [
+                    "pierce/#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "pierce/#enableToggle"
+                ]
+            ],
+            "offsetY": 5.984375,
+            "offsetX": 11.75
+        },
+        {
+            "type": "click",
+            "target": "chrome://extensions/?id=ckpenlhganbgdanipjkpbnoklodocibm",
+            "selectors": [
+                [
+                    "extensions-manager",
+                    "#items-list",
+                    "#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "#enableToggle"
+                ],
+                [
+                    "pierce/#ckpenlhganbgdanipjkpbnoklodocibm",
+                    "pierce/#enableToggle"
+                ]
+            ],
+            "offsetY": 5.984375,
+            "offsetX": 11.75
+        },
+        {
+            "type": "navigate",
+            "url": "chrome://settings/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "chrome://settings/",
+                    "title": "Settings"
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "chrome://settings/",
+            "selectors": [
+                [
+                    "aria/Appearance"
+                ],
+                [
+                    "settings-ui",
+                    "#leftMenu",
+                    "#appearance"
+                ],
+                [
+                    "pierce/#appearance"
+                ]
+            ],
+            "offsetY": 15,
+            "offsetX": 194
+        },
+        {
+            "type": "click",
+            "target": "chrome://settings/",
+            "selectors": [
+                [
+                    "aria/Show tab groups in bookmarks bar"
+                ],
+                [
+                    "settings-ui",
+                    "#main",
+                    "settings-basic-page",
+                    "settings-appearance-page",
+                    "#showSavedTabGroups",
+                    "#control"
+                ],
+                [
+                    "pierce/#showSavedTabGroups",
+                    "pierce/#control"
+                ]
+            ],
+            "offsetY": 5.921875,
+            "offsetX": 12.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://settings/",
+            "selectors": [
+                [
+                    "aria/Show tab groups in bookmarks bar"
+                ],
+                [
+                    "settings-ui",
+                    "#main",
+                    "settings-basic-page",
+                    "settings-appearance-page",
+                    "#showSavedTabGroups",
+                    "#control"
+                ],
+                [
+                    "pierce/#showSavedTabGroups",
+                    "pierce/#control"
+                ]
+            ],
+            "offsetY": 14.921875,
+            "offsetX": 14.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://settings/",
+            "selectors": [
+                [
+                    "aria/Show home button"
+                ],
+                [
+                    "settings-ui",
+                    "#main",
+                    "settings-basic-page",
+                    "settings-appearance-page",
+                    "#pages > div > settings-toggle-button:nth-of-type(1)",
+                    "#control"
+                ],
+                [
+                    "pierce/settings-appearance-page",
+                    "pierce/#pages > div > settings-toggle-button:nth-of-type(1)",
+                    "pierce/#control"
+                ]
+            ],
+            "offsetY": 13.9375,
+            "offsetX": 9.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://settings/",
+            "selectors": [
+                [
+                    "aria/Show home button"
+                ],
+                [
+                    "settings-ui",
+                    "#main",
+                    "settings-basic-page",
+                    "settings-appearance-page",
+                    "#pages > div > settings-toggle-button:nth-of-type(1)",
+                    "#control"
+                ],
+                [
+                    "pierce/settings-appearance-page",
+                    "pierce/#pages > div > settings-toggle-button:nth-of-type(1)",
+                    "pierce/#control"
+                ]
+            ],
+            "offsetY": 13.9375,
+            "offsetX": 11.421875
+        },
+        {
+            "type": "click",
+            "target": "chrome://settings/",
+            "selectors": [
+                [
+                    "aria/Show home button"
+                ],
+                [
+                    "settings-ui",
+                    "#main",
+                    "settings-basic-page",
+                    "settings-appearance-page",
+                    "#pages > div > settings-toggle-button:nth-of-type(1)",
+                    "#control"
+                ],
+                [
+                    "pierce/settings-appearance-page",
+                    "pierce/#pages > div > settings-toggle-button:nth-of-type(1)",
+                    "pierce/#control"
+                ]
+            ],
+            "offsetY": 13.9375,
+            "offsetX": 9.671875
+        },
+        {
+            "type": "click",
+            "target": "chrome://settings/",
+            "selectors": [
+                [
+                    "aria/Show home button"
+                ],
+                [
+                    "settings-ui",
+                    "#main",
+                    "settings-basic-page",
+                    "settings-appearance-page",
+                    "#pages > div > settings-toggle-button:nth-of-type(1)",
+                    "#control"
+                ],
+                [
+                    "pierce/settings-appearance-page",
+                    "pierce/#pages > div > settings-toggle-button:nth-of-type(1)",
+                    "pierce/#control"
+                ]
+            ],
+            "offsetY": 13.9375,
+            "offsetX": 13.421875
+        },
+        {
+            "type": "click",
+            "target": "chrome://settings/",
+            "selectors": [
+                [
+                    "settings-ui",
+                    "#main",
+                    "settings-basic-page",
+                    "settings-appearance-page",
+                    "#customizeToolbar",
+                    "#icon",
+                    "#icon"
+                ],
+                [
+                    "pierce/#customizeToolbar",
+                    "pierce/#icon",
+                    "pierce/#icon"
+                ]
+            ],
+            "offsetY": 18.953125,
+            "offsetX": 26.609375
+        },
+        {
+            "type": "navigate",
+            "url": "chrome://new-tab-page/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "chrome://new-tab-page/",
+                    "title": "New Tab"
+                }
+            ]
+        },
+        {
+            "type": "navigate",
+            "url": "https://www.google.com/search?q=chrome+custom+toolbar&oq=chrome+custom+tool&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyBggBEEUYOTIICAIQABgWGB4yCAgDEAAYFhgeMggIBBAAGBYYHjIICAUQABgWGB4yCAgGEAAYFhgeMggIBxAAGBYYHjIICAgQABgWGB4yCggJEAAYChgWGB7SAQg0NzI2ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://www.google.com/search?q=chrome+custom+toolbar&oq=chrome+custom+tool&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyBggBEEUYOTIICAIQABgWGB4yCAgDEAAYFhgeMggIBBAAGBYYHjIICAUQABgWGB4yCAgGEAAYFhgeMggIBxAAGBYYHjIICAgQABgWGB4yCggJEAAYChgWGB7SAQg0NzI2ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8",
+                    "title": ""
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "https://www.google.com/search?q=chrome+custom+toolbar&oq=chrome+custom+tool&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyBggBEEUYOTIICAIQABgWGB4yCAgDEAAYFhgeMggIBBAAGBYYHjIICAUQABgWGB4yCAgGEAAYFhgeMggIBxAAGBYYHjIICAgQABgWGB4yCggJEAAYChgWGB7SAQg0NzI2ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8",
+            "selectors": [
+                [
+                    "aria/How to make a toolbar in Google Chrome?"
+                ],
+                [
+                    "div:nth-of-type(6) h3"
+                ],
+                [
+                    "xpath///*[@id=\"rso\"]/div[6]/div/div/div/div[1]/div/div/span/a/h3"
+                ],
+                [
+                    "pierce/div:nth-of-type(6) h3"
+                ],
+                [
+                    "text/How to make a"
+                ]
+            ],
+            "offsetY": 24.546875,
+            "offsetX": 330,
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://stackoverflow.com/questions/6681697/how-to-make-a-toolbar-in-google-chrome",
+                    "title": "How to make a toolbar in Google Chrome? - Stack Overflow"
+                }
+            ]
+        },
+        {
+            "type": "doubleClick",
+            "target": "https://stackoverflow.com/questions/6681697/how-to-make-a-toolbar-in-google-chrome",
+            "selectors": [
+                [
+                    "aria/The chrome.infobars API",
+                    "aria/[role=\"code\"]"
+                ],
+                [
+                    "h1:nth-of-type(1) > code"
+                ],
+                [
+                    "xpath///*[@id=\"answer-17279590\"]/div/div[2]/div[1]/h1[1]/code"
+                ],
+                [
+                    "pierce/h1:nth-of-type(1) > code"
+                ]
+            ],
+            "offsetY": 19.46875,
+            "offsetX": 84.203125
+        },
+        {
+            "type": "click",
+            "target": "https://stackoverflow.com/questions/6681697/how-to-make-a-toolbar-in-google-chrome",
+            "selectors": [
+                [
+                    "aria/The chrome.infobars API",
+                    "aria/[role=\"code\"]"
+                ],
+                [
+                    "h1:nth-of-type(1) > code"
+                ],
+                [
+                    "xpath///*[@id=\"answer-17279590\"]/div/div[2]/div[1]/h1[1]/code"
+                ],
+                [
+                    "pierce/h1:nth-of-type(1) > code"
+                ]
+            ],
+            "offsetY": 20.46875,
+            "offsetX": 93.203125
+        },
+        {
+            "type": "doubleClick",
+            "target": "https://stackoverflow.com/questions/6681697/how-to-make-a-toolbar-in-google-chrome",
+            "selectors": [
+                [
+                    "aria/The chrome.infobars API",
+                    "aria/[role=\"code\"]"
+                ],
+                [
+                    "h1:nth-of-type(1) > code"
+                ],
+                [
+                    "xpath///*[@id=\"answer-17279590\"]/div/div[2]/div[1]/h1[1]/code"
+                ],
+                [
+                    "pierce/h1:nth-of-type(1) > code"
+                ]
+            ],
+            "offsetY": 20.46875,
+            "offsetX": 99.203125
+        },
+        {
+            "type": "click",
+            "target": "https://stackoverflow.com/questions/6681697/how-to-make-a-toolbar-in-google-chrome",
+            "selectors": [
+                [
+                    "aria/The chrome.infobars API",
+                    "aria/[role=\"code\"]"
+                ],
+                [
+                    "h1:nth-of-type(1) > code"
+                ],
+                [
+                    "xpath///*[@id=\"answer-17279590\"]/div/div[2]/div[1]/h1[1]/code"
+                ],
+                [
+                    "pierce/h1:nth-of-type(1) > code"
+                ]
+            ],
+            "offsetY": 18.46875,
+            "offsetX": 176.203125
+        },
+        {
+            "type": "click",
+            "target": "https://stackoverflow.com/questions/6681697/how-to-make-a-toolbar-in-google-chrome",
+            "selectors": [
+                [
+                    "aria/The chrome.infobars API",
+                    "aria/[role=\"code\"]"
+                ],
+                [
+                    "h1:nth-of-type(1) > code"
+                ],
+                [
+                    "xpath///*[@id=\"answer-17279590\"]/div/div[2]/div[1]/h1[1]/code"
+                ],
+                [
+                    "pierce/h1:nth-of-type(1) > code"
+                ]
+            ],
+            "offsetY": 23.46875,
+            "offsetX": 169.203125
+        },
+        {
+            "type": "click",
+            "target": "https://stackoverflow.com/questions/6681697/how-to-make-a-toolbar-in-google-chrome",
+            "selectors": [
+                [
+                    "aria/http://crossrider.com/download/chrome/35180"
+                ],
+                [
+                    "#answer-17287530 li:nth-of-type(3) > a"
+                ],
+                [
+                    "xpath///*[@id=\"answer-17287530\"]/div/div[2]/div[1]/ul/li[3]/a"
+                ],
+                [
+                    "pierce/#answer-17287530 li:nth-of-type(3) > a"
+                ],
+                [
+                    "text/http://crossrider.com/download/chrome/35180"
+                ]
+            ],
+            "offsetY": 8.953125,
+            "offsetX": 116.03125
+        },
+        {
+            "type": "navigate",
+            "url": "https://www.google.com/search?q=chrome+custom+toolbar&oq=chrome+custom+tool&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyBggBEEUYOTIICAIQABgWGB4yCAgDEAAYFhgeMggIBBAAGBYYHjIICAUQABgWGB4yCAgGEAAYFhgeMggIBxAAGBYYHjIICAgQABgWGB4yCggJEAAYChgWGB7SAQg0NzI2ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://www.google.com/search?q=chrome+custom+toolbar&oq=chrome+custom+tool&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyBggBEEUYOTIICAIQABgWGB4yCAgDEAAYFhgeMggIBBAAGBYYHjIICAUQABgWGB4yCAgGEAAYFhgeMggIBxAAGBYYHjIICAgQABgWGB4yCggJEAAYChgWGB7SAQg0NzI2ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8",
+                    "title": "chrome custom toolbar - Google Search"
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "https://www.google.com/search?q=chrome+custom+toolbar&oq=chrome+custom+tool&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyBggBEEUYOTIICAIQABgWGB4yCAgDEAAYFhgeMggIBBAAGBYYHjIICAUQABgWGB4yCAgGEAAYFhgeMggIBxAAGBYYHjIICAgQABgWGB4yCggJEAAYChgWGB7SAQg0NzI2ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8",
+            "selectors": [
+                [
+                    "aria/Chrome's Customisable Toolbar Just Made My Life Easier"
+                ],
+                [
+                    "div:nth-of-type(7) h3"
+                ],
+                [
+                    "xpath///*[@id=\"rso\"]/div[7]/div/div/div/div[1]/div/div/span/a/h3"
+                ],
+                [
+                    "pierce/div:nth-of-type(7) h3"
+                ]
+            ],
+            "offsetY": 21.6875,
+            "offsetX": 163,
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://www.howtogeek.com/chromes-customisable-toolbar-just-made-my-life-easier/",
+                    "title": "Chrome’s Customisable Toolbar Just Made My Life Easier"
+                }
+            ]
+        }
+    ]
+}

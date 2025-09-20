@@ -139,16 +139,60 @@
     }
 
     recordNetworkRequest(data) {
+      // Enhanced network data with more detail
+      const enhancedData = {
+        ...data,
+        initiator: this.getRequestInitiator(),
+        resourceType: this.guessResourceType(data.url),
+        redirectChain: [],
+        timing: {
+          requestStart: data.timestamp,
+          responseEnd: data.timestamp + (data.duration || 0)
+        },
+        requestId: this.generateRequestId()
+      };
+
       // Send to content script
       window.postMessage({
         type: 'pokemayne_network',
-        payload: data
+        payload: enhancedData
       }, '*');
+    }
+
+    generateRequestId() {
+      return Date.now().toString(36) + Math.random().toString(36).substring(2);
+    }
+
+    getRequestInitiator() {
+      try {
+        const stack = new Error().stack;
+        const lines = stack.split('\n');
+        // Find first line that's not from our monitoring code
+        for (let line of lines.slice(3)) {
+          if (line.includes('http') && !line.includes('injected.js')) {
+            return line.trim();
+          }
+        }
+      } catch (e) {
+        // Ignore
+      }
+      return 'unknown';
+    }
+
+    guessResourceType(url) {
+      const lowerUrl = url.toLowerCase();
+      if (lowerUrl.includes('/api/') || lowerUrl.includes('.json')) return 'xhr';
+      if (lowerUrl.match(/\.(js|mjs)$/)) return 'script';
+      if (lowerUrl.match(/\.(css)$/)) return 'stylesheet';
+      if (lowerUrl.match(/\.(png|jpg|jpeg|gif|webp|svg)$/)) return 'image';
+      if (lowerUrl.match(/\.(woff|woff2|ttf|eot)$/)) return 'font';
+      if (lowerUrl.includes('/websocket') || lowerUrl.includes('ws://') || lowerUrl.includes('wss://')) return 'websocket';
+      return 'other';
     }
   }
 
   // Initialize network monitoring
-  const networkMonitor = new NetworkMonitor();
+  new NetworkMonitor(); // Used for its side effects
 
   // Stealth: Override common detection methods
   const stealthMethods = {
@@ -207,17 +251,26 @@
 
     // Randomize timing
     addTimingJitter() {
-      const originalSetTimeout = window.setTimeout;
-      const originalSetInterval = window.setInterval;
+      // Store originals for potential restoration
+      if (!window.pokemayneOriginalTiming) {
+        window.pokemayneOriginalTiming = {
+          setTimeout: window.setTimeout,
+          setInterval: window.setInterval
+        };
+      }
 
       window.setTimeout = function(callback, delay, ...args) {
-        const jitter = Math.random() * 10 - 5; // ±5ms jitter
-        return originalSetTimeout(callback, delay + jitter, ...args);
+        // Limit jitter and ensure minimum delay
+        const safeDelay = Math.max(delay || 0, 1);
+        const jitter = Math.random() * 5 - 2.5; // ±2.5ms jitter (reduced)
+        return window.pokemayneOriginalTiming.setTimeout(callback, safeDelay + jitter, ...args);
       };
 
       window.setInterval = function(callback, delay, ...args) {
-        const jitter = Math.random() * 10 - 5; // ±5ms jitter
-        return originalSetInterval(callback, delay + jitter, ...args);
+        // Ensure minimum interval to prevent runaway loops
+        const safeDelay = Math.max(delay || 16, 16); // Minimum 16ms (60fps)
+        const jitter = Math.random() * 5 - 2.5; // ±2.5ms jitter (reduced)
+        return window.pokemayneOriginalTiming.setInterval(callback, safeDelay + jitter, ...args);
       };
     }
   };
