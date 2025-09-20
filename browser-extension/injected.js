@@ -263,14 +263,14 @@
         // Limit jitter and ensure minimum delay
         const safeDelay = Math.max(delay || 0, 1);
         const jitter = Math.random() * 5 - 2.5; // ±2.5ms jitter (reduced)
-        return window.pokemayneOriginalTiming.setTimeout(callback, safeDelay + jitter, ...args);
+        return window.pokemayneOriginalTiming.setTimeout.call(window, callback, safeDelay + jitter, ...args);
       };
 
       window.setInterval = function(callback, delay, ...args) {
         // Ensure minimum interval to prevent runaway loops
         const safeDelay = Math.max(delay || 16, 16); // Minimum 16ms (60fps)
         const jitter = Math.random() * 5 - 2.5; // ±2.5ms jitter (reduced)
-        return window.pokemayneOriginalTiming.setInterval(callback, safeDelay + jitter, ...args);
+        return window.pokemayneOriginalTiming.setInterval.call(window, callback, safeDelay + jitter, ...args);
       };
     }
   };
