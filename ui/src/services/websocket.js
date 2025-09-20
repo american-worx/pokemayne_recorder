@@ -51,6 +51,21 @@ export const connectWebSocket = () => {
     // Handle recording updates
   });
 
+  socket.on('extension_recording_started', (data) => {
+    console.log('🎬 Extension recording started:', data);
+    // Handle extension recording start
+  });
+
+  socket.on('extension_recording_stopped', (data) => {
+    console.log('🛑 Extension recording stopped:', data);
+    // Handle extension recording stop
+  });
+
+  socket.on('extension_recording_data', (data) => {
+    console.log('📊 Extension recording data:', data);
+    // Handle extension recording data
+  });
+
   socket.on('monitor_update', (data) => {
     console.log('📊 Monitor update received:', data);
     // Handle monitor updates

@@ -734,6 +734,12 @@ class PokemayneAPI {
         networkRequests: []
       });
 
+      // Notify UI clients that recording has started
+      this.io.to('ui').emit('extension_recording_started', {
+        sessionId,
+        timestamp: Date.now()
+      });
+
       res.json({
         success: true,
         sessionId,
@@ -748,6 +754,12 @@ class PokemayneAPI {
       if (sessionId && this.activeRecordings.has(sessionId)) {
         this.activeRecordings.delete(sessionId);
         logger.info(`Extension HTTP recording stopped: ${sessionId}`);
+
+        // Notify UI clients that recording has stopped
+        this.io.to('ui').emit('extension_recording_stopped', {
+          sessionId,
+          timestamp: Date.now()
+        });
       }
 
       res.json({
